@@ -114,7 +114,6 @@ public class ServiceQuiz {
         }
     }
 
-    // ---------- Helpers: List <-> DB string ----------
     private String listToDb(List<String> list) {
         if (list == null || list.isEmpty()) return "";
         return list.stream()

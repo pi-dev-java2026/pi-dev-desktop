@@ -10,10 +10,10 @@ public class Cours {
     private String description;
     private LocalDate dateCreation;
 
-    // Constructeur vide (obligatoire pour JavaFX / JDBC)
+
     public Cours() {}
 
-    // Constructeur sans id (INSERT)
+
     public Cours(String nomCours, String contenu, String description, LocalDate dateCreation) {
         this.nomCours = nomCours;
         this.contenu = contenu;
@@ -21,7 +21,7 @@ public class Cours {
         this.dateCreation = dateCreation;
     }
 
-    // Constructeur complet (SELECT)
+
     public Cours(int idCours, String nomCours, String contenu, String description, LocalDate dateCreation) {
         this.idCours = idCours;
         this.nomCours = nomCours;

@@ -15,7 +15,7 @@ public class Quiz {
 
     public Quiz() {}
 
-    // Constructeur sans id
+
     public Quiz(int idCours, String titre, List<String> listeDeReponse,
                 String reponseCorrect, int scoreDeQuiz, LocalDate dateCreation) {
         this.idCours = idCours;
@@ -26,7 +26,6 @@ public class Quiz {
         this.dateCreation = dateCreation;
     }
 
-    // Constructeur complet
     public Quiz(int idQuiz, int idCours, String titre, List<String> listeDeReponse,
                 String reponseCorrect, int scoreDeQuiz, LocalDate dateCreation) {
         this.idQuiz = idQuiz;
