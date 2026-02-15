@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="700.0" prefWidth="450.0" styleClass="login-container" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Fintech.controllers.LoginController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="50.0" layoutY="50.0" prefHeight="600.0" prefWidth="350.0" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="40.0">
+         <children>
+            <!-- Logo Area -->
+            <HBox alignment="CENTER" spacing="0" styleClass="logo-container">
+               <children>
+                   <Label styleClass="logo-text-id" text="ID" />
+                   <Label styleClass="logo-text-dinari" text="INARI" />
+               </children>
+            </HBox>
+
+            <!-- Welcome Text -->
+            <Label styleClass="welcome-title" text="Bienvenue" />
+            <Label styleClass="welcome-subtitle" text="Connectez-vous pour gérer vos finances" />
+            
+            <!-- Email Field -->
+            <VBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <Label styleClass="field-label" text="Email" />
+                  <HBox alignment="CENTER_LEFT" styleClass="input-box">
+                      <Label styleClass="input-icon" text="✉" />
+                      <TextField fx:id="emailField" promptText="nom@exemple.com" styleClass="input-field-inner" HBox.hgrow="ALWAYS" />
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </VBox>
+            
+            <!-- Password Field -->
+            <VBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                        <Label styleClass="field-label" text="Mot de passe" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Hyperlink styleClass="forgot-password-link" text="Oublié ?" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" styleClass="input-box">
+                      <Label styleClass="input-icon" text="🔒" />
+                      <PasswordField fx:id="passwordField" promptText="........" styleClass="input-field-inner" HBox.hgrow="ALWAYS" />
+                      <Label styleClass="input-icon" text="👁" />
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </VBox>
+            
+            <!-- Login Button -->
+            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLogin" maxWidth="500.0" styleClass="login-btn" text="Se connecter">
+               <VBox.margin>
+                  <Insets top="25.0" bottom="10.0" />
+               </VBox.margin>
+            </Button>
+            
+            <!-- Divider -->
+            <HBox alignment="CENTER" spacing="15.0">
+               <children>
+                  <Separator prefWidth="80.0" />
+                  <Label styleClass="separator-label" text="OU CONTINUER AVEC" />
+                  <Separator prefWidth="80.0" />
+               </children>
+               <VBox.margin>
+                  <Insets top="15.0" bottom="15.0" />
+               </VBox.margin>
+            </HBox>
+            
+            <!-- Social Buttons -->
+            <HBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <Button mnemonicParsing="false" prefWidth="140.0" styleClass="social-btn">
+                     <graphic>
+                        <HBox alignment="CENTER" spacing="8">
+                           <Label text="■" styleClass="social-icon" />
+                           <Label text="Google" />
+                        </HBox>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+            
+            <!-- Create Account -->
+            <HBox alignment="CENTER" spacing="5.0">
+               <children>
+                  <Label text="Pas encore de compte ?" styleClass="normal-text" />
+                  <Hyperlink onAction="#handleCreateAccount" styleClass="create-account-link" text="Créer un compte" />
+               </children>
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </HBox>
+            
+            <!-- Footer -->
+            <Label styleClass="footer-text" text="UNE FINTECH 100% TUNISIENNE POUR SIMPLIFIER VOS FINANCES" wrapText="true" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Label>
+
+            <!-- Theme Toggle -->
+            <HBox alignment="CENTER_RIGHT">
+                 <Label text="🌙☀" style="-fx-font-size: 18px; -fx-cursor: hand; -fx-padding: 10;" />
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
