@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.ActiviteListController"
+      spacing="14">
+
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="＋ Ajouter" onAction="#goAdd" styleClass="primary-btn"/>
+        <VBox>
+            <Label text="Liste des Activités" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+            <Label text="Filtrer + Trier" style="-fx-text-fill: #6c778a;"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Rafraîchir" onAction="#refresh" styleClass="secondary-btn"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="card">
+        <padding>
+            <Insets top="12" right="12" bottom="12" left="12"/>
+        </padding>
+
+        <ComboBox fx:id="statutCB" promptText="Statut" prefWidth="170" styleClass="input"/>
+        <DatePicker fx:id="dateFromDP" promptText="Date min" />
+        <DatePicker fx:id="dateToDP" promptText="Date max" />
+
+        <TextField fx:id="minTF" promptText="Montant min" prefWidth="120" styleClass="input"/>
+        <TextField fx:id="maxTF" promptText="Montant max" prefWidth="120" styleClass="input"/>
+
+        <ComboBox fx:id="sortCB" prefWidth="190" styleClass="input"/>
+
+        <Button text="Appliquer" onAction="#applyFilterSort" styleClass="primary-btn"/>
+        <Button text="Reset" onAction="#resetFilterSort" styleClass="secondary-btn"/>
+    </HBox>
+
+    <Label fx:id="filterMsgLabel" />
+
+    <VBox styleClass="card" spacing="10">
+        <ListView fx:id="activiteLV" prefHeight="520"/>
+    </VBox>
+
+</VBox>
