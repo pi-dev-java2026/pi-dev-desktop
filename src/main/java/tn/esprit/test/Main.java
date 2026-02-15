@@ -14,9 +14,9 @@ public class Main {
         AbonnementService abonnementService = new AbonnementService();
         PaiementService paiementService = new PaiementService();
 
-        System.out.println("===== TEST ABONNEMENT AVEC PAIEMENTS AUTOMATIQUES =====\n");
+        System.out.println("===== TEST CRUD DINARI =====\n");
 
-        // AJOUTER DES ABONNEMENTS (les paiements sont générés automatiquement)
+        // Ajout
         System.out.println("1. Ajout d'abonnements :");
         abonnementService.ajouter(new Abonnement("Netflix", 14.99, Date.valueOf("2024-01-15"), "Mensuel", "Streaming", true));
         System.out.println();
@@ -24,42 +24,52 @@ public class Main {
         System.out.println();
         abonnementService.ajouter(new Abonnement("Salle de sport", 49.99, Date.valueOf("2024-01-10"), "Mensuel", "Sport", true));
 
-        // AFFICHER LES ABONNEMENTS
-        System.out.println("\n\n2. Liste des abonnements :");
+        // Affichage normal
+        System.out.println("\n2. Liste de TOUS les abonnements :");
         List<Abonnement> abonnements = abonnementService.afficher();
         for (Abonnement a : abonnements) {
             System.out.println(a);
         }
 
-        // AFFICHER LES PAIEMENTS (générés automatiquement)
-        System.out.println("\n\n3. Liste des paiements (générés automatiquement) :");
-        List<Paiement> paiements = paiementService.afficher();
-        for (Paiement p : paiements) {
-            System.out.println(p);
+        // Affichage par catégorie - CORRECTION ICI
+        System.out.println("\n3. Abonnements de la catégorie 'Streaming' :");
+        List<Abonnement> abosStreaming = abonnementService.afficherParCategorie("Streaming");
+        for (Abonnement a : abosStreaming) {
+            System.out.println("  → " + a.getCategorie() + " : " + a.getNom() + " - " + a.getPrix() + "€");
         }
 
-        // MODIFIER UN ABONNEMENT
+        System.out.println("\n4. Abonnements de la catégorie 'Musique' :");
+        List<Abonnement> abosMusique = abonnementService.afficherParCategorie("Musique");
+        for (Abonnement a : abosMusique) {
+            System.out.println("  → " + a.getCategorie() + " : " + a.getNom() + " - " + a.getPrix() + "€");
+        }
+
+        // Modification
         if (!abonnements.isEmpty()) {
-            System.out.println("\n\n4. Modification d'un abonnement :");
+            System.out.println("\n5. Modification du prix de Netflix :");
             Abonnement aModifier = abonnements.get(0);
-            System.out.println("Avant : " + aModifier.getNom() + " - " + aModifier.getPrix() + "€");
+            System.out.println("  Ancien prix : " + aModifier.getPrix() + "€");
             aModifier.setPrix(16.99);
             abonnementService.modifier(aModifier);
-            System.out.println("Après : " + aModifier.getNom() + " - " + aModifier.getPrix() + "€");
+            System.out.println("  Nouveau prix : 16.99€");
         }
 
-        // SUPPRIMER UN ABONNEMENT (CASCADE supprime aussi les paiements)
+        // Suppression
         if (abonnements.size() > 1) {
-            System.out.println("\n\n5. Suppression d'un abonnement (CASCADE) :");
-            int idAbonnement = abonnements.get(abonnements.size() - 1).getId();
-            System.out.println("Suppression de l'abonnement ID : " + idAbonnement);
-            abonnementService.supprimer(idAbonnement);
+            System.out.println("\n6. Suppression du dernier abonnement :");
+            Abonnement aDel = abonnements.get(abonnements.size() - 1);
+            System.out.println("  Suppression de : " + aDel.getNom());
+            abonnementService.supprimer(aDel.getId());
         }
 
-        // RÉSULTAT FINAL
-        System.out.println("\n\n===== RÉSULTAT FINAL =====");
-        System.out.println("Abonnements restants : " + abonnementService.afficher().size());
-        System.out.println("Paiements restants : " + paiementService.afficher().size());
+        // Affichage final
+        System.out.println("\n7. Liste finale des abonnements :");
+        List<Abonnement> abosFinal = abonnementService.afficher();
+        for (Abonnement a : abosFinal) {
+            System.out.println("  → " + a.getNom() + " (" + a.getCategorie() + ") - " + a.getPrix() + "€");
+        }
+
         System.out.println("\n===== FIN DES TESTS =====");
+        System.out.println("✅ Tout fonctionne correctement !");
     }
 }

@@ -7,5 +7,4 @@ public interface IService<T> {
     void modifier(T t);
     void supprimer(int id);
     List<T> afficher();
-    T getById(int id);
 }

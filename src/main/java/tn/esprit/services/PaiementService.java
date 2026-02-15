@@ -2,12 +2,12 @@ package tn.esprit.services;
 
 import tn.esprit.entities.Paiement;
 import tn.esprit.utils.MyConnection;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PaiementService implements IService<Paiement> {
+
     private Connection connection;
 
     public PaiementService() {
@@ -16,57 +16,85 @@ public class PaiementService implements IService<Paiement> {
 
     @Override
     public void ajouter(Paiement paiement) {
-        String req = "INSERT INTO paiement (montant, date_paiement, statut, abonnement_id) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO paiement (montant, date_paiement, statut, abonnement_id, " +
+                "nom_titulaire, prenom_titulaire, mode_paiement, numero_carte, date_expiration, cvv) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try {
-            PreparedStatement ps = connection.prepareStatement(req);
+            PreparedStatement ps = connection.prepareStatement(query);
             ps.setDouble(1, paiement.getMontant());
             ps.setDate(2, paiement.getDatePaiement());
             ps.setString(3, paiement.getStatut());
             ps.setInt(4, paiement.getAbonnementId());
+            ps.setString(5, paiement.getNomTitulaire());
+            ps.setString(6, paiement.getPrenomTitulaire());
+            ps.setString(7, paiement.getModePaiement());
+            ps.setString(8, paiement.getNumeroCarte());
+            ps.setString(9, paiement.getDateExpiration());
+            ps.setString(10, paiement.getCvv());
+
             ps.executeUpdate();
-            System.out.println("Paiement ajouté avec succès !");
+            System.out.println("✅ Paiement ajouté !");
+
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'ajout : " + e.getMessage());
+            System.err.println("❌ Erreur ajout paiement :");
+            e.printStackTrace();
         }
     }
 
     @Override
     public void modifier(Paiement paiement) {
-        String req = "UPDATE paiement SET montant=?, date_paiement=?, statut=?, abonnement_id=? WHERE id=?";
+        String query = "UPDATE paiement SET montant=?, date_paiement=?, statut=?, " +
+                "nom_titulaire=?, prenom_titulaire=?, mode_paiement=?, " +
+                "numero_carte=?, date_expiration=?, cvv=? WHERE id=?";
+
         try {
-            PreparedStatement ps = connection.prepareStatement(req);
+            PreparedStatement ps = connection.prepareStatement(query);
             ps.setDouble(1, paiement.getMontant());
             ps.setDate(2, paiement.getDatePaiement());
             ps.setString(3, paiement.getStatut());
-            ps.setInt(4, paiement.getAbonnementId());
-            ps.setInt(5, paiement.getId());
+            ps.setString(4, paiement.getNomTitulaire());
+            ps.setString(5, paiement.getPrenomTitulaire());
+            ps.setString(6, paiement.getModePaiement());
+            ps.setString(7, paiement.getNumeroCarte());
+            ps.setString(8, paiement.getDateExpiration());
+            ps.setString(9, paiement.getCvv());
+            ps.setInt(10, paiement.getId());
+
             ps.executeUpdate();
-            System.out.println("Paiement modifié avec succès !");
+            System.out.println("✅ Paiement modifié !");
+
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la modification : " + e.getMessage());
+            System.err.println("❌ Erreur modification :");
+            e.printStackTrace();
         }
     }
 
     @Override
     public void supprimer(int id) {
-        String req = "DELETE FROM paiement WHERE id=?";
+        String query = "DELETE FROM paiement WHERE id=?";
+
         try {
-            PreparedStatement ps = connection.prepareStatement(req);
+            PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, id);
             ps.executeUpdate();
-            System.out.println("Paiement supprimé avec succès !");
+            System.out.println("✅ Paiement supprimé !");
+
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression : " + e.getMessage());
+            System.err.println("❌ Erreur suppression :");
+            e.printStackTrace();
         }
     }
 
     @Override
     public List<Paiement> afficher() {
         List<Paiement> paiements = new ArrayList<>();
-        String req = "SELECT * FROM paiement ORDER BY date_paiement ASC";
+        String query = "SELECT * FROM paiement";
+
         try {
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery(req);
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+
             while (rs.next()) {
                 Paiement p = new Paiement();
                 p.setId(rs.getInt("id"));
@@ -74,21 +102,32 @@ public class PaiementService implements IService<Paiement> {
                 p.setDatePaiement(rs.getDate("date_paiement"));
                 p.setStatut(rs.getString("statut"));
                 p.setAbonnementId(rs.getInt("abonnement_id"));
+                p.setNomTitulaire(rs.getString("nom_titulaire"));
+                p.setPrenomTitulaire(rs.getString("prenom_titulaire"));
+                p.setModePaiement(rs.getString("mode_paiement"));
+                p.setNumeroCarte(rs.getString("numero_carte"));
+                p.setDateExpiration(rs.getString("date_expiration"));
+                p.setCvv(rs.getString("cvv"));
+
                 paiements.add(p);
             }
+
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'affichage : " + e.getMessage());
+            System.err.println("❌ Erreur récupération paiements :");
+            e.printStackTrace();
         }
+
         return paiements;
     }
 
-    @Override
-    public Paiement getById(int id) {
-        String req = "SELECT * FROM paiement WHERE id=?";
+    public Paiement findById(int id) {
+        String query = "SELECT * FROM paiement WHERE id=?";
+
         try {
-            PreparedStatement ps = connection.prepareStatement(req);
+            PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
                 Paiement p = new Paiement();
                 p.setId(rs.getInt("id"));
@@ -96,11 +135,19 @@ public class PaiementService implements IService<Paiement> {
                 p.setDatePaiement(rs.getDate("date_paiement"));
                 p.setStatut(rs.getString("statut"));
                 p.setAbonnementId(rs.getInt("abonnement_id"));
+                p.setNomTitulaire(rs.getString("nom_titulaire"));
+                p.setPrenomTitulaire(rs.getString("prenom_titulaire"));
+                p.setModePaiement(rs.getString("mode_paiement"));
+                p.setNumeroCarte(rs.getString("numero_carte"));
+                p.setDateExpiration(rs.getString("date_expiration"));
+                p.setCvv(rs.getString("cvv"));
                 return p;
             }
+
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la recherche : " + e.getMessage());
+            e.printStackTrace();
         }
+
         return null;
     }
 }

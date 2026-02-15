@@ -10,9 +10,9 @@ public class Abonnement {
     private String frequence;
     private String categorie;
     private boolean actif;
+    private String imagePath;  // Nouveau : chemin de l'image
 
-    public Abonnement() {
-    }
+    public Abonnement() {}
 
     public Abonnement(String nom, double prix, Date dateDebut, String frequence, String categorie, boolean actif) {
         this.nom = nom;
@@ -23,82 +23,43 @@ public class Abonnement {
         this.actif = actif;
     }
 
-    public Abonnement(int id, String nom, double prix, Date dateDebut, String frequence, String categorie, boolean actif) {
-        this.id = id;
+    public Abonnement(String nom, double prix, Date dateDebut, String frequence, String categorie, boolean actif, String imagePath) {
         this.nom = nom;
         this.prix = prix;
         this.dateDebut = dateDebut;
         this.frequence = frequence;
         this.categorie = categorie;
         this.actif = actif;
+        this.imagePath = imagePath;
     }
 
-    public int getId() {
-        return id;
-    }
+    // Getters et Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public String getNom() { return nom; }
+    public void setNom(String nom) { this.nom = nom; }
 
-    public String getNom() {
-        return nom;
-    }
+    public double getPrix() { return prix; }
+    public void setPrix(double prix) { this.prix = prix; }
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
+    public Date getDateDebut() { return dateDebut; }
+    public void setDateDebut(Date dateDebut) { this.dateDebut = dateDebut; }
 
-    public double getPrix() {
-        return prix;
-    }
+    public String getFrequence() { return frequence; }
+    public void setFrequence(String frequence) { this.frequence = frequence; }
 
-    public void setPrix(double prix) {
-        this.prix = prix;
-    }
+    public String getCategorie() { return categorie; }
+    public void setCategorie(String categorie) { this.categorie = categorie; }
 
-    public Date getDateDebut() {
-        return dateDebut;
-    }
+    public boolean isActif() { return actif; }
+    public void setActif(boolean actif) { this.actif = actif; }
 
-    public void setDateDebut(Date dateDebut) {
-        this.dateDebut = dateDebut;
-    }
-
-    public String getFrequence() {
-        return frequence;
-    }
-
-    public void setFrequence(String frequence) {
-        this.frequence = frequence;
-    }
-
-    public String getCategorie() {
-        return categorie;
-    }
-
-    public void setCategorie(String categorie) {
-        this.categorie = categorie;
-    }
-
-    public boolean isActif() {
-        return actif;
-    }
-
-    public void setActif(boolean actif) {
-        this.actif = actif;
-    }
+    public String getImagePath() { return imagePath; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
     @Override
     public String toString() {
-        return "Abonnement{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", prix=" + prix +
-                ", dateDebut=" + dateDebut +
-                ", frequence='" + frequence + '\'' +
-                ", categorie='" + categorie + '\'' +
-                ", actif=" + actif +
-                '}';
+        return "Abonnement{id=" + id + ", nom='" + nom + "', prix=" + prix + " DT}";
     }
 }
