@@ -14,14 +14,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 public class UserManagementController {
 
@@ -74,83 +72,40 @@ public class UserManagementController {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    // Create card layout for each user
+                    // Create simplified card layout showing only name
                     HBox card = new HBox(20);
                     card.setAlignment(Pos.CENTER_LEFT);
                     card.setPadding(new javafx.geometry.Insets(15, 20, 15, 20));
                     card.setStyle(
                             "-fx-background-color: white; -fx-background-radius: 8px; -fx-border-color: #e0e0e0; -fx-border-radius: 8px; -fx-border-width: 1px;");
 
-                    // ID
-                    Label idLabel = new Label("#" + user.getId());
-                    idLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #666; -fx-min-width: 50px;");
+                    // User icon
+                    Label userIcon = new Label("👤");
+                    userIcon.setStyle("-fx-font-size: 24px; -fx-padding: 5;");
 
-                    // Name
-                    VBox nameBox = new VBox(2);
+                    // Name only
                     Label nameLabel = new Label(user.getName());
-                    nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-                    Label emailLabel = new Label(user.getEmail());
-                    emailLabel.setStyle("-fx-text-fill: #666; -fx-font-size: 12px;");
-                    nameBox.getChildren().addAll(nameLabel, emailLabel);
-                    nameBox.setPrefWidth(250);
-
-                    // Phone
-                    Label phoneLabel = new Label("📱 " + user.getPhone());
-                    phoneLabel.setStyle("-fx-text-fill: #555; -fx-min-width: 150px;");
-
-                    // Password (masked)
-                    Label passwordLabel = new Label("🔒 • • • • • • • •");
-                    passwordLabel.setStyle("-fx-text-fill: #999; -fx-min-width: 120px;");
-
-                    // Role Badge
-                    Label roleBadge = new Label(user.getRole());
-                    roleBadge.getStyleClass().add("role-badge");
-                    roleBadge.setPadding(new javafx.geometry.Insets(5, 15, 5, 15));
-                    roleBadge.setStyle("-fx-background-radius: 15px; -fx-font-size: 11px; -fx-font-weight: bold;");
-
-                    if (user.getRole().equalsIgnoreCase("Admin")) {
-                        roleBadge.setStyle(
-                                roleBadge.getStyle() + "-fx-background-color: #e3f2fd; -fx-text-fill: #1976d2;");
-                    } else if (user.getRole().equalsIgnoreCase("Manager")) {
-                        roleBadge.setStyle(
-                                roleBadge.getStyle() + "-fx-background-color: #fff3e0; -fx-text-fill: #f57c00;");
-                    } else {
-                        roleBadge.setStyle(
-                                roleBadge.getStyle() + "-fx-background-color: #f1f8e9; -fx-text-fill: #689f38;");
-                    }
+                    nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #1f2937;");
 
                     // Spacer
                     Region spacer = new Region();
                     HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
 
-                    // Action buttons
-                    Button editBtn = new Button("✏️");
-                    Button deleteBtn = new Button("🗑️");
+                    // View Profile button
+                    Button viewProfileBtn = new Button("👁️  View Profile");
+                    viewProfileBtn.setStyle(
+                            "-fx-background-color: #3d5a80; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 8px; -fx-padding: 10px 20px; -fx-font-size: 13px; -fx-font-weight: bold;");
 
-                    editBtn.setStyle(
-                            "-fx-background-color: #e3f2fd; -fx-text-fill: #1976d2; -fx-cursor: hand; -fx-background-radius: 5px; -fx-padding: 8px 12px;");
-                    deleteBtn.setStyle(
-                            "-fx-background-color: #ffebee; -fx-text-fill: #c62828; -fx-cursor: hand; -fx-background-radius: 5px; -fx-padding: 8px 12px;");
+                    viewProfileBtn.setOnMouseEntered(e -> viewProfileBtn.setStyle(
+                            "-fx-background-color: #2c4560; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 8px; -fx-padding: 10px 20px; -fx-font-size: 13px; -fx-font-weight: bold;"));
 
-                    // Check admin permissions
-                    boolean isAdmin = UserSession.getInstance().isAdmin();
-                    editBtn.setDisable(!isAdmin);
-                    deleteBtn.setDisable(!isAdmin);
+                    viewProfileBtn.setOnMouseExited(e -> viewProfileBtn.setStyle(
+                            "-fx-background-color: #3d5a80; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 8px; -fx-padding: 10px 20px; -fx-font-size: 13px; -fx-font-weight: bold;"));
 
-                    if (!isAdmin) {
-                        editBtn.setStyle(editBtn.getStyle() + "-fx-opacity: 0.5;");
-                        deleteBtn.setStyle(deleteBtn.getStyle() + "-fx-opacity: 0.5;");
-                    }
-
-                    editBtn.setOnAction(e -> handleEditUser(user));
-                    deleteBtn.setOnAction(e -> handleDeleteUser(user));
-
-                    HBox actionsBox = new HBox(10, editBtn, deleteBtn);
-                    actionsBox.setAlignment(Pos.CENTER_RIGHT);
+                    viewProfileBtn.setOnAction(e -> handleViewProfile(user));
 
                     // Add all elements to card
-                    card.getChildren().addAll(idLabel, nameBox, phoneLabel, passwordLabel, roleBadge, spacer,
-                            actionsBox);
+                    card.getChildren().addAll(userIcon, nameLabel, spacer, viewProfileBtn);
 
                     setGraphic(card);
                     setText(null);
@@ -228,38 +183,21 @@ public class UserManagementController {
         navigateTo(event, "/Fintech/views/ReclamationManagement.fxml");
     }
 
-    private void handleEditUser(User user) {
-        // Check if user is admin
-        if (!UserSession.getInstance().isAdmin()) {
-            showAlert(Alert.AlertType.ERROR, "Accès refusé",
-                    "Seuls les administrateurs peuvent modifier les utilisateurs.");
-            return;
-        }
-        navigateToUserForm(null, user);
-    }
+    private void handleViewProfile(User user) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fintech/views/UserProfile.fxml"));
+            Parent root = loader.load();
 
-    private void handleDeleteUser(User user) {
-        // Check if user is admin
-        if (!UserSession.getInstance().isAdmin()) {
-            showAlert(Alert.AlertType.ERROR, "Accès refusé",
-                    "Seuls les administrateurs peuvent supprimer les utilisateurs.");
-            return;
-        }
+            // Pass the user to the profile controller
+            UserProfileController controller = loader.getController();
+            controller.setUser(user);
 
-        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmAlert.setTitle("Confirmation");
-        confirmAlert.setHeaderText("Supprimer l'utilisateur");
-        confirmAlert.setContentText("Êtes-vous sûr de vouloir supprimer " + user.getName() + " ?");
-
-        Optional<ButtonType> result = confirmAlert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            try {
-                serviceUser.supprimer(user.getId());
-                loadUsers();
-                showAlert(Alert.AlertType.INFORMATION, "Succès", "Utilisateur supprimé avec succès.");
-            } catch (SQLException e) {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de supprimer l'utilisateur: " + e.getMessage());
-            }
+            Stage stage = (Stage) usersList.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger le profil: " + e.getMessage());
         }
     }
 
@@ -274,13 +212,7 @@ public class UserManagementController {
                 controller.setUser(user);
             }
 
-            Stage stage;
-            if (event != null) {
-                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            } else {
-                stage = (Stage) usersList.getScene().getWindow();
-            }
-
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
