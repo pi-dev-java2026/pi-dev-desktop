@@ -38,21 +38,31 @@ public class GestionpaiementsController {
     private String statutSelectionne = "A venir";
     private Paiement enEdition = null;
 
-    private static final String CHAMP_OK     = "-fx-background-radius:9;-fx-border-radius:9;" +
-            "-fx-border-color:#e0e8f0;-fx-border-width:1.5;-fx-padding:11 14;" +
-            "-fx-font-size:13px;-fx-background-color:#fafbfc;";
-    private static final String CHAMP_ERREUR = "-fx-background-radius:9;-fx-border-radius:9;" +
-            "-fx-border-color:#e74c3c;-fx-border-width:2;-fx-padding:11 14;" +
-            "-fx-font-size:13px;-fx-background-color:#fff5f5;";
+    // Prix des tiers (identiques à GestionabonnementsController)
+    private static final double PRIX_NORMAL  = 15.0;
+    private static final double PRIX_PREMIUM = 40.0;
+    private static final double PRIX_GOLD    = 80.0;
+
+    private static final String CHAMP_OK =
+            "-fx-background-radius:9;-fx-border-radius:9;" +
+                    "-fx-border-color:#e0e8f0;-fx-border-width:1.5;-fx-padding:11 14;" +
+                    "-fx-font-size:13px;-fx-background-color:#fafbfc;";
+    private static final String CHAMP_ERREUR =
+            "-fx-background-radius:9;-fx-border-radius:9;" +
+                    "-fx-border-color:#e74c3c;-fx-border-width:2;-fx-padding:11 14;" +
+                    "-fx-font-size:13px;-fx-background-color:#fff5f5;";
 
     public void setMainController(MainController mc) { this.mainController = mc; }
 
     @FXML
     public void initialize() {
         if (comboStatut != null)
-            comboStatut.setItems(FXCollections.observableArrayList("Tous les statuts", "Paye", "A venir"));
+            comboStatut.setItems(FXCollections.observableArrayList(
+                    "Tous les statuts", "Paye", "A venir"));
         if (comboTri != null)
-            comboTri.setItems(FXCollections.observableArrayList("Date croissant", "Date decroissant", "Montant croissant", "Montant decroissant"));
+            comboTri.setItems(FXCollections.observableArrayList(
+                    "Date croissant", "Date decroissant",
+                    "Montant croissant", "Montant decroissant"));
         charger();
     }
 
@@ -87,8 +97,8 @@ public class GestionpaiementsController {
     @FXML
     private void appliquerFiltres() {
         String r   = txtRecherche != null ? txtRecherche.getText().toLowerCase().trim() : "";
-        String st  = comboStatut != null ? comboStatut.getValue() : null;
-        String tri = comboTri    != null ? comboTri.getValue()    : null;
+        String st  = comboStatut  != null ? comboStatut.getValue()  : null;
+        String tri = comboTri     != null ? comboTri.getValue()     : null;
 
         List<Paiement> f = tous.stream()
                 .filter(p -> r.isEmpty()
@@ -104,7 +114,8 @@ public class GestionpaiementsController {
             case "Montant croissant"   -> f.sort((a, b) -> Double.compare(a.getMontant(), b.getMontant()));
             case "Montant decroissant" -> f.sort((a, b) -> Double.compare(b.getMontant(), a.getMontant()));
         }
-        majStats(f); afficher(f);
+        majStats(f);
+        afficher(f);
     }
 
     @FXML private void rafraichir() {
@@ -117,7 +128,7 @@ public class GestionpaiementsController {
     @FXML
     private void ouvrirFormulaire() {
         enEdition = null;
-        if (lblTitreForm != null) lblTitreForm.setText("Modifier le Paiement");
+        if (lblTitreForm != null) lblTitreForm.setText("Nouveau Paiement");
         viderForm();
         reinitialiserErreurs();
         chargerServices();
@@ -131,7 +142,7 @@ public class GestionpaiementsController {
         if (lblTitreForm != null) lblTitreForm.setText("Modifier le Paiement");
         chargerServices();
         reinitialiserErreurs();
-        if (comboService != null) comboService.setValue(getNomService(p.getAbonnementId()));
+        if (comboService       != null) comboService.setValue(getNomService(p.getAbonnementId()));
         if (txtMontant         != null) txtMontant.setText(String.valueOf(p.getMontant()));
         if (txtNomTitulaire    != null) txtNomTitulaire.setText(safe(p.getNomTitulaire(), ""));
         if (txtPrenomTitulaire != null) txtPrenomTitulaire.setText(safe(p.getPrenomTitulaire(), ""));
@@ -155,26 +166,39 @@ public class GestionpaiementsController {
     private void majToggle() {
         boolean p = "Paye".equals(statutSelectionne);
         if (btnStatutPaye != null)
-            btnStatutPaye.setStyle("-fx-font-size:13px;-fx-font-weight:bold;-fx-padding:11 30;" +
-                    "-fx-background-radius:9 0 0 9;-fx-cursor:hand;-fx-border-radius:9 0 0 9;-fx-border-width:1.5;" +
-                    (p ? "-fx-background-color:#e8fff4;-fx-text-fill:#27ae60;-fx-border-color:#27ae60;"
-                            : "-fx-background-color:#f5f5f5;-fx-text-fill:#8899aa;-fx-border-color:#dde3ea;"));
+            btnStatutPaye.setStyle(
+                    "-fx-font-size:13px;-fx-font-weight:bold;-fx-padding:11 30;" +
+                            "-fx-background-radius:9 0 0 9;-fx-cursor:hand;" +
+                            "-fx-border-radius:9 0 0 9;-fx-border-width:1.5;" +
+                            (p ? "-fx-background-color:#e8fff4;-fx-text-fill:#27ae60;-fx-border-color:#27ae60;"
+                                    : "-fx-background-color:#f5f5f5;-fx-text-fill:#8899aa;-fx-border-color:#dde3ea;"));
         if (btnStatutAttente != null)
-            btnStatutAttente.setStyle("-fx-font-size:13px;-fx-padding:11 30;" +
-                    "-fx-background-radius:0 9 9 0;-fx-cursor:hand;-fx-border-radius:0 9 9 0;-fx-border-width:1.5;" +
-                    (!p ? "-fx-background-color:#fff8e8;-fx-text-fill:#e67e22;-fx-border-color:#e67e22;"
-                            : "-fx-background-color:#f5f5f5;-fx-text-fill:#8899aa;-fx-border-color:#dde3ea;"));
+            btnStatutAttente.setStyle(
+                    "-fx-font-size:13px;-fx-padding:11 30;" +
+                            "-fx-background-radius:0 9 9 0;-fx-cursor:hand;" +
+                            "-fx-border-radius:0 9 9 0;-fx-border-width:1.5;" +
+                            (!p ? "-fx-background-color:#fff8e8;-fx-text-fill:#e67e22;-fx-border-color:#e67e22;"
+                                    : "-fx-background-color:#f5f5f5;-fx-text-fill:#8899aa;-fx-border-color:#dde3ea;"));
     }
 
+    // ══════════════════════════════════════════════════════════════════════
+    // VALIDATION — txtMontant ignoré s'il est désactivé (vient du renouvellement)
+    // ══════════════════════════════════════════════════════════════════════
     private boolean validerFormulaire() {
         boolean ok = true;
         if (comboService != null) ok &= validerCombo(comboService, errService);
-        ok &= validerTextField(txtMontant, errMontant);
-        ok &= validerTextField(txtNomTitulaire, errNom);
+
+        // Montant : seulement si le champ est actif (sinon déjà défini par le tier)
+        if (txtMontant != null && !txtMontant.isDisabled()) {
+            ok &= validerTextField(txtMontant, errMontant);
+        }
+
+        ok &= validerTextField(txtNomTitulaire,    errNom);
         ok &= validerTextField(txtPrenomTitulaire, errPrenom);
-        ok &= validerTextField(txtNumeroCarte, errCarte);
-        ok &= validerTextField(txtDateExpiration, errExpiration);
-        ok &= validerTextField(txtCvv, errCvv);
+        ok &= validerTextField(txtNumeroCarte,     errCarte);
+        ok &= validerTextField(txtDateExpiration,  errExpiration);
+        ok &= validerTextField(txtCvv,             errCvv);
+
         if (datePickerPaie == null || datePickerPaie.getValue() == null) {
             if (errDate != null) { errDate.setVisible(true); errDate.setManaged(true); }
             ok = false;
@@ -211,40 +235,43 @@ public class GestionpaiementsController {
     }
 
     private void reinitialiserErreurs() {
-        for (TextField tf : new TextField[]{txtMontant, txtNomTitulaire, txtPrenomTitulaire,
-                txtNumeroCarte, txtDateExpiration, txtCvv}) {
+        for (TextField tf : new TextField[]{txtMontant, txtNomTitulaire,
+                txtPrenomTitulaire, txtNumeroCarte, txtDateExpiration, txtCvv}) {
             if (tf != null) tf.setStyle(CHAMP_OK);
         }
         if (comboService != null)
             comboService.setStyle("-fx-background-radius:9;-fx-font-size:13px;" +
                     "-fx-border-color:#e0e8f0;-fx-border-width:1.5;-fx-border-radius:9;");
-        for (Label l : new Label[]{errService, errMontant, errNom, errPrenom,
-                errCarte, errExpiration, errCvv, errDate}) {
+        for (Label l : new Label[]{errService, errMontant, errNom,
+                errPrenom, errCarte, errExpiration, errCvv, errDate}) {
             if (l != null) { l.setVisible(false); l.setManaged(false); }
         }
     }
 
+    // ══════════════════════════════════════════════════════════════════════
+    // SAUVEGARDER — aussi appelé "confirmerPaiement" depuis le FXML
+    // ══════════════════════════════════════════════════════════════════════
     @FXML
     private void sauvegarder() {
         if (!validerFormulaire()) return;
         try {
-            double montant = Double.parseDouble(txtMontant.getText());
-
-            // Chercher l'abonnement
-            Abonnement abo = null;
-            if (comboService != null && comboService.getValue() != null) {
-                abo = aboService.afficher().stream()
-                        .filter(a -> a.getNom().equals(comboService.getValue()))
-                        .findFirst().orElse(null);
-            } else if (enEdition != null) {
-                int id = enEdition.getAbonnementId();
-                abo = aboService.afficher().stream()
-                        .filter(a -> a.getId() == id).findFirst().orElse(null);
+            // ── Montant : si désactivé → prix selon tier, sinon valeur saisie ──
+            double montant;
+            if (txtMontant != null && txtMontant.isDisabled()) {
+                // Vient du renouvellement : calculer selon tier de l'abo
+                Abonnement aboTmp = getAbonnementSelectionne();
+                montant = aboTmp != null ? prixParTier(aboTmp.getTier()) : PRIX_NORMAL;
+            } else {
+                montant = Double.parseDouble(txtMontant.getText().replace(",", "."));
             }
+
+            Abonnement abo = getAbonnementSelectionne();
             if (abo == null) { alerte(Alert.AlertType.ERROR, "Service introuvable !"); return; }
 
             String mode   = "Carte Bancaire";
-            Date   date   = datePickerPaie != null ? Date.valueOf(datePickerPaie.getValue()) : Date.valueOf(LocalDate.now());
+            Date   date   = datePickerPaie != null
+                    ? Date.valueOf(datePickerPaie.getValue())
+                    : Date.valueOf(LocalDate.now());
             String nom    = txtNomTitulaire    != null ? txtNomTitulaire.getText()    : "";
             String prenom = txtPrenomTitulaire != null ? txtPrenomTitulaire.getText() : "";
             String carte  = txtNumeroCarte     != null ? txtNumeroCarte.getText()     : "";
@@ -255,42 +282,27 @@ public class GestionpaiementsController {
                 paieService.ajouter(new Paiement(
                         montant, date, statutSelectionne, abo.getId(),
                         nom, prenom, mode, carte, expir, cvv));
-
-                // ══════════════════════════════════════════════════════
-                // RENOUVELLEMENT : si statut = Paye → mettre à jour
-                // la dateDebut de l'abonnement à aujourd'hui
-                // → la prochaine expiration sera recalculée correctement
-                // ══════════════════════════════════════════════════════
-                if ("Paye".equals(statutSelectionne)) {
-                    abo.setDateDebut(Date.valueOf(LocalDate.now()));
-                    aboService.modifier(abo);
-                    alerte(Alert.AlertType.INFORMATION,
-                            "✅ Paiement confirmé !\n" +
-                                    "🔄 Abonnement « " + abo.getNom() + " » renouvelé.\n" +
-                                    "📅 Prochaine expiration : " + calculerProchaineExpiration(abo));
-                } else {
-                    alerte(Alert.AlertType.INFORMATION, "Paiement ajouté !");
-                }
-
             } else {
                 enEdition.setAbonnementId(abo.getId()); enEdition.setMontant(montant);
-                enEdition.setDatePaiement(date); enEdition.setStatut(statutSelectionne);
-                enEdition.setNomTitulaire(nom); enEdition.setPrenomTitulaire(prenom);
-                enEdition.setModePaiement(mode); enEdition.setNumeroCarte(carte);
-                enEdition.setDateExpiration(expir); enEdition.setCvv(cvv);
+                enEdition.setDatePaiement(date);        enEdition.setStatut(statutSelectionne);
+                enEdition.setNomTitulaire(nom);         enEdition.setPrenomTitulaire(prenom);
+                enEdition.setModePaiement(mode);        enEdition.setNumeroCarte(carte);
+                enEdition.setDateExpiration(expir);     enEdition.setCvv(cvv);
                 paieService.modifier(enEdition);
+            }
 
-                // Renouvellement lors d'une modification aussi
-                if ("Paye".equals(statutSelectionne)) {
-                    abo.setDateDebut(Date.valueOf(LocalDate.now()));
-                    aboService.modifier(abo);
-                    alerte(Alert.AlertType.INFORMATION,
-                            "✅ Paiement modifié !\n" +
-                                    "🔄 Abonnement « " + abo.getNom() + " » renouvelé.\n" +
-                                    "📅 Prochaine expiration : " + calculerProchaineExpiration(abo));
-                } else {
-                    alerte(Alert.AlertType.INFORMATION, "Paiement modifié !");
-                }
+            // ── Si Paye → renouveler la dateDebut de l'abonnement ──────────
+            if ("Paye".equals(statutSelectionne)) {
+                abo.setDateDebut(Date.valueOf(LocalDate.now()));
+                // ── Mettre à jour le prix selon tier sélectionné ───────────
+                abo.setPrix(montant);
+                aboService.modifier(abo);
+                alerte(Alert.AlertType.INFORMATION,
+                        "✅ Paiement confirmé !\n" +
+                                "🔄 Abonnement « " + abo.getNom() + " » renouvelé.\n" +
+                                "📅 Prochaine expiration : " + calculerProchaineExpiration(abo));
+            } else {
+                alerte(Alert.AlertType.INFORMATION, "Paiement enregistré !");
             }
 
             fermerFormulaire();
@@ -306,7 +318,34 @@ public class GestionpaiementsController {
         }
     }
 
-    // ── Calcule et formate la prochaine date d'expiration ─────────────
+    // Alias pour le FXML qui appelle #confirmerPaiement
+    @FXML
+    private void confirmerPaiement() { sauvegarder(); }
+
+    // ── Récupère l'abonnement sélectionné dans comboService ───────────
+    private Abonnement getAbonnementSelectionne() {
+        if (comboService != null && comboService.getValue() != null) {
+            return aboService.afficher().stream()
+                    .filter(a -> a.getNom().equals(comboService.getValue()))
+                    .findFirst().orElse(null);
+        }
+        if (enEdition != null) {
+            int id = enEdition.getAbonnementId();
+            return aboService.afficher().stream()
+                    .filter(a -> a.getId() == id).findFirst().orElse(null);
+        }
+        return null;
+    }
+
+    private double prixParTier(String tier) {
+        if (tier == null) return PRIX_NORMAL;
+        return switch (tier) {
+            case "Premium" -> PRIX_PREMIUM;
+            case "Gold"    -> PRIX_GOLD;
+            default        -> PRIX_NORMAL;
+        };
+    }
+
     private String calculerProchaineExpiration(Abonnement abo) {
         LocalDate debut = abo.getDateDebut().toLocalDate();
         LocalDate fin   = "Annuel".equalsIgnoreCase(abo.getFrequence())
@@ -315,8 +354,10 @@ public class GestionpaiementsController {
     }
 
     private void supprimerPaiement(Paiement p) {
-        Alert c = new Alert(Alert.AlertType.CONFIRMATION); c.setHeaderText(null);
-        c.setContentText("Supprimer ce paiement de " + String.format("%.3f TND", p.getMontant()) + " ?");
+        Alert c = new Alert(Alert.AlertType.CONFIRMATION);
+        c.setHeaderText(null);
+        c.setContentText("Supprimer ce paiement de " +
+                String.format("%.3f TND", p.getMontant()) + " ?");
         c.showAndWait().ifPresent(btn -> {
             if (btn == ButtonType.OK) { paieService.supprimer(p.getId()); charger(); }
         });
@@ -343,13 +384,16 @@ public class GestionpaiementsController {
         Label stLbl = lblW(isPaye ? "Paye" : "A venir", 130,
                 "-fx-background-color:" + (isPaye ? "#e8fff4" : "#fff8e8") + ";" +
                         "-fx-text-fill:" + (isPaye ? "#27ae60" : "#e67e22") + ";" +
-                        "-fx-font-size:11px;-fx-font-weight:bold;-fx-padding:4 12;-fx-background-radius:20;");
+                        "-fx-font-size:11px;-fx-font-weight:bold;" +
+                        "-fx-padding:4 12;-fx-background-radius:20;");
 
-        Button bE = actionBtn("Modifier", "#e8eeff"); bE.setOnAction(e -> { e.consume(); ouvrirModifier(p); });
-        Button bD = actionBtn("Suppr.", "#fff0f0");   bD.setStyle(bD.getStyle() + "-fx-text-fill:#e74c3c;");
+        Button bE = actionBtn("Modifier", "#e8eeff");
+        bE.setOnAction(e -> { e.consume(); ouvrirModifier(p); });
+        Button bD = actionBtn("Suppr.", "#fff0f0");
+        bD.setStyle(bD.getStyle() + "-fx-text-fill:#e74c3c;");
         bD.setOnAction(e -> { e.consume(); supprimerPaiement(p); });
-        Label fleche = lbl(">", "-fx-font-size:20px;-fx-text-fill:#1a3a7a;-fx-font-weight:bold;" +
-                "-fx-cursor:hand;-fx-padding:0 0 0 5;");
+        Label fleche = lbl(">", "-fx-font-size:20px;-fx-text-fill:#1a3a7a;" +
+                "-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:0 0 0 5;");
 
         HBox actions = new HBox(8); HBox.setHgrow(actions, Priority.ALWAYS);
         actions.setAlignment(Pos.CENTER_RIGHT);
@@ -360,10 +404,14 @@ public class GestionpaiementsController {
         details.setStyle("-fx-background-color:#f8faff;-fx-padding:18 25;" +
                 "-fx-background-radius:0 0 12 12;-fx-border-color:#1a3a7a;" +
                 "-fx-border-width:0 1.5 1.5 1.5;-fx-border-radius:0 0 12 12;");
-        String titulaire = (safe(p.getNomTitulaire(), "") + " " + safe(p.getPrenomTitulaire(), "")).trim();
+        String titulaire = (safe(p.getNomTitulaire(),"") + " " +
+                safe(p.getPrenomTitulaire(),"")).trim();
         HBox row1 = new HBox(30);
-        row1.getChildren().addAll(dBox("SERVICE", nom), dBox("DATE", p.getDatePaiement().toString()),
-                dBox("MONTANT", String.format("%.3f TND", p.getMontant())), dBox("STATUT", p.getStatut()));
+        row1.getChildren().addAll(
+                dBox("SERVICE", nom),
+                dBox("DATE", p.getDatePaiement().toString()),
+                dBox("MONTANT", String.format("%.3f TND", p.getMontant())),
+                dBox("STATUT", p.getStatut()));
         HBox row2 = new HBox(30); row2.setStyle("-fx-padding:10 0 0 0;");
         row2.getChildren().addAll(
                 dBox("TITULAIRE", titulaire.isEmpty() ? "-" : titulaire),
@@ -378,32 +426,39 @@ public class GestionpaiementsController {
             details.setVisible(open[0]); details.setManaged(open[0]);
             fleche.setText(open[0] ? "v" : ">");
             ligne.setStyle(open[0]
-                    ? "-fx-background-color:white;-fx-padding:14 20;-fx-background-radius:12 12 0 0;" +
-                    "-fx-cursor:hand;-fx-border-color:#1a3a7a;-fx-border-width:1.5 1.5 0 1.5;-fx-border-radius:12 12 0 0;"
-                    : "-fx-background-color:white;-fx-background-radius:12;-fx-padding:14 20;" +
-                    "-fx-cursor:hand;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.04),6,0,0,2);");
+                    ? "-fx-background-color:white;-fx-padding:14 20;" +
+                    "-fx-background-radius:12 12 0 0;-fx-cursor:hand;" +
+                    "-fx-border-color:#1a3a7a;-fx-border-width:1.5 1.5 0 1.5;" +
+                    "-fx-border-radius:12 12 0 0;"
+                    : "-fx-background-color:white;-fx-background-radius:12;" +
+                    "-fx-padding:14 20;-fx-cursor:hand;" +
+                    "-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.04),6,0,0,2);");
         };
         fleche.setOnMouseClicked(e -> { e.consume(); toggle.run(); });
         ligne.setOnMouseClicked(e -> toggle.run());
         ligne.setOnMouseEntered(e -> { if (!open[0]) ligne.setStyle(
-                "-fx-background-color:#f0f4ff;-fx-background-radius:12;-fx-padding:14 20;-fx-cursor:hand;"); });
+                "-fx-background-color:#f0f4ff;-fx-background-radius:12;" +
+                        "-fx-padding:14 20;-fx-cursor:hand;"); });
         ligne.setOnMouseExited(e -> { if (!open[0]) ligne.setStyle(
-                "-fx-background-color:white;-fx-background-radius:12;-fx-padding:14 20;-fx-cursor:hand;" +
+                "-fx-background-color:white;-fx-background-radius:12;" +
+                        "-fx-padding:14 20;-fx-cursor:hand;" +
                         "-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.04),6,0,0,2);"); });
 
-        VBox container = new VBox(0); container.getChildren().addAll(ligne, details);
+        VBox container = new VBox(0);
+        container.getChildren().addAll(ligne, details);
         return container;
     }
 
     private void chargerServices() {
         if (comboService == null) return;
         comboService.setItems(FXCollections.observableArrayList(
-                aboService.afficher().stream().map(Abonnement::getNom).distinct().sorted().toList()));
+                aboService.afficher().stream()
+                        .map(Abonnement::getNom).distinct().sorted().toList()));
     }
 
     private void viderForm() {
         if (comboService       != null) { comboService.setValue(null); comboService.setDisable(false); }
-        if (txtMontant         != null) { txtMontant.clear(); txtMontant.setDisable(false); }
+        if (txtMontant         != null) { txtMontant.clear();          txtMontant.setDisable(false); }
         if (txtNomTitulaire    != null) txtNomTitulaire.clear();
         if (txtPrenomTitulaire != null) txtPrenomTitulaire.clear();
         if (txtNumeroCarte     != null) txtNumeroCarte.clear();
@@ -413,26 +468,26 @@ public class GestionpaiementsController {
     }
 
     private String getNomService(int id) {
-        return aboService.afficher().stream().filter(a -> a.getId() == id)
+        return aboService.afficher().stream()
+                .filter(a -> a.getId() == id)
                 .map(Abonnement::getNom).findFirst().orElse("Service #" + id);
     }
 
     private String safe(String s, String def) {
         return (s == null || s.isBlank()) ? def : s;
     }
+
     private String maskCarte(String n) {
         if (n == null || n.isBlank()) return "-";
         return n.length() >= 4 ? "**** **** **** " + n.substring(n.length() - 4) : n;
     }
+
     private void alerte(Alert.AlertType t, String m) {
         Alert a = new Alert(t); a.setHeaderText(null); a.setContentText(m); a.showAndWait();
     }
-    private Label lbl(String t, String s) {
-        Label l = new Label(t); l.setStyle(s); return l;
-    }
-    private Label lblW(String t, double w, String s) {
-        Label l = lbl(t, s); l.setPrefWidth(w); return l;
-    }
+
+    private Label lbl(String t, String s) { Label l = new Label(t); l.setStyle(s); return l; }
+    private Label lblW(String t, double w, String s) { Label l = lbl(t,s); l.setPrefWidth(w); return l; }
     private Button actionBtn(String t, String bg) {
         Button b = new Button(t);
         b.setStyle("-fx-background-color:" + bg + ";-fx-font-size:11px;" +
@@ -451,18 +506,28 @@ public class GestionpaiementsController {
         if (mainController != null) mainController.switchAbonnements();
     }
 
+    // ══════════════════════════════════════════════════════════════════════
+    // Appelé depuis CalendrierController → bouton Renouveler
+    // ══════════════════════════════════════════════════════════════════════
     public void ouvrirFormulaireAvecAbonnement(Abonnement abo) {
         ouvrirFormulaire();
+
         if (comboService != null) {
             comboService.setValue(abo.getNom());
             comboService.setDisable(true);
         }
+
+        // ── Montant : si prix = 0 (pas encore défini), on met le prix du tier
+        // ── Sinon on affiche le prix actuel de l'abonnement
+        double prix = abo.getPrix() > 0 ? abo.getPrix() : prixParTier(abo.getTier());
         if (txtMontant != null) {
-            txtMontant.setText(String.format("%.3f", abo.getPrix()));
-            txtMontant.setDisable(true);
+            txtMontant.setText(String.format("%.3f", prix));
+            txtMontant.setDisable(true); // sera recalculé au confirm
         }
+
         if (lblTitreForm != null) lblTitreForm.setText("Payer " + abo.getNom());
-        // Pré-sélectionner statut "Paye" puisque c'est un renouvellement
+
+        // Pré-sélectionner statut "Paye" pour un renouvellement
         statutSelectionne = "Paye";
         majToggle();
     }
