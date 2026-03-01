@@ -46,21 +46,33 @@
                 <TextField fx:id="tfTitre" promptText="Ex: Quiz Java" styleClass="input"
                            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                <Label text="Réponses (séparées par ;):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <TextField fx:id="tfReponses" promptText="A;B;C;D" styleClass="input"
+                <Label text="Question:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="tfQuestion" promptText="Ex: Quelle est la différence entre..." styleClass="input"
                            GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-                <Label text="Réponse correcte:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                <TextField fx:id="tfCorrecte" promptText="Ex: B" styleClass="input"
+                <Label text="Réponses (séparées par ;):" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField fx:id="tfReponses" promptText="A;B;C;D" styleClass="input"
                            GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-                <Label text="Score:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                <TextField fx:id="tfScore" promptText="Ex: 10" styleClass="input"
+                <Label text="Réponse correcte:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <TextField fx:id="tfCorrecte" promptText="Ex: B" styleClass="input"
                            GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                <Label text="Score:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                <TextField fx:id="tfScore" promptText="Ex: 10" styleClass="input"
+                           GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                <Label text="Mode Examen:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <CheckBox fx:id="cbExamMode" text="Activer le mode examen avec chronomètre"
+                          GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                <Label text="Temps limite (minutes):" GridPane.rowIndex="7" GridPane.columnIndex="0" fx:id="lblTimeLimit"/>
+                <TextField fx:id="tfTimeLimit" promptText="Ex: 5" styleClass="input"
+                           GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 
                 <Button text="Ajouter" styleClass="primary-btn"
                         onAction="#ajouterQuiz"
-                        GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                        GridPane.rowIndex="8" GridPane.columnIndex="1"/>
             </GridPane>
         </VBox>
     </center>

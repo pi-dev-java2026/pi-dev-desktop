@@ -46,8 +46,10 @@ public class ListeQuiz {
                 Label title = new Label(safe(q.getTitre()));
                 title.getStyleClass().add("card-title");
 
+                String modeLabel = q.isExamMode() ? " | Mode: Exam ⏱️ (" + q.getTimeLimit() + " min)" : " | Mode: Normal";
                 String info = "Cours ID: " + q.getIdCours()
                         + " | Score: " + q.getScoreDeQuiz()
+                        + modeLabel
                         + " | Rép. correcte: " + safe(q.getReponseCorrect());
                 Label sub = new Label(info);
                 sub.getStyleClass().add("card-sub");

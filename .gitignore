@@ -36,3 +36,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### API Keys and Secrets ###
+local.properties
+.env
+config.properties
+application-local.properties

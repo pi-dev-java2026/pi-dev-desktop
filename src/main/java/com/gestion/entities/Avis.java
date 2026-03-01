@@ -42,3 +42,4 @@ public class Avis {
     public LocalDate getDateCreation() { return dateCreation; }
     public void setDateCreation(LocalDate dateCreation) { this.dateCreation = dateCreation; }
 }
+

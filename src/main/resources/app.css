@@ -6,7 +6,7 @@
 
 
 .sidebar {
-    -fx-background-color: #111827;
+    -fx-background-color: #1a2332;
     -fx-padding: 18;
     -fx-spacing: 12;
 }
@@ -162,7 +162,7 @@
 }
 
 .input-combo .arrow {
-    -fx-background-color: #6B7280;
+    -fx-background-color: #4f6cc8;
 }
 
 /* hover + focus like inputs */

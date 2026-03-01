@@ -1,143 +1,186 @@
 package controllers;
 
-import com.gestion.Services.ServiceCours;
+import com.gestion.Services.ServiceQuiz;
 import com.gestion.entities.Cours;
-import com.gestion.utils.PanierStorage;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
+import com.gestion.entities.Quiz;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
 public class AfficherCours {
 
-    @FXML private TextField tfSearch;
-    @FXML private ListView<Cours> listViewCours;
+    @FXML private Label lblNomCours;
+    @FXML private Label lblDate;
+    @FXML private TextArea txtDescription;
+    @FXML private VBox quizContainer;
 
-    private final ObservableList<Cours> data = FXCollections.observableArrayList();
-    private FilteredList<Cours> filtered;
+    private final ServiceQuiz serviceQuiz = new ServiceQuiz();
+    private Cours cours;
 
-    private final ServiceCours service = new ServiceCours();
+    public void setCours(Cours cours) {
+        this.cours = cours;
 
-    @FXML
-    public void initialize() {
-        filtered = new FilteredList<>(data, c -> true);
-        listViewCours.setItems(filtered);
+        lblNomCours.setText(cours.getNomCours());
+        lblDate.setText("📅 Créé le: " + cours.getDateCreation());
+        
+        // Format description with structured content
+        String formattedDescription = formatDescription(cours.getDescription());
+        txtDescription.setText(formattedDescription);
 
-        listViewCours.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(Cours c, boolean empty) {
-                super.updateItem(c, empty);
-
-                if (empty || c == null) {
-                    setText(null);
-                    setGraphic(null);
-                    return;
-                }
-
-                Button btnPanier = new Button("🧺 Ajouter au panier");
-                btnPanier.getStyleClass().add("primary-btn");
-
-                btnPanier.setOnAction(e -> {
-                    PanierStorage.addCoursId(c.getIdCours());
-
-                    new Alert(Alert.AlertType.INFORMATION,
-                            "Ajouté au panier ✅ (Cours id=" + c.getIdCours() + ")"
-                    ).showAndWait();
-                });
-
-
-                Label title = new Label(c.getNomCours());
-                title.getStyleClass().add("card-title");
-
-                Label sub = new Label(c.getDescription() == null ? "" : c.getDescription());
-                sub.getStyleClass().add("card-sub");
-                sub.setWrapText(true);
-
-                Label date = new Label(c.getDateCreation() == null ? "" : "Créé le: " + c.getDateCreation());
-                date.getStyleClass().add("card-sub");
-
-                VBox left = new VBox(6, title, sub, date);
-                HBox.setHgrow(left, Priority.ALWAYS);
-
-                VBox right = new VBox(10, btnPanier);
-                right.setMinWidth(180);
-
-                HBox row = new HBox(12, left, right);
-
-                VBox card = new VBox(row);
-                card.getStyleClass().add("card");
-
-                setGraphic(card);
-            }
-        });
-
-        tfSearch.textProperty().addListener((obs, o, n) -> apply());
-        refresh();
+        refreshQuizzes();
+    }
+    
+    private String formatDescription(String baseDescription) {
+        StringBuilder formatted = new StringBuilder();
+        
+        // Base description
+        if (baseDescription != null && !baseDescription.trim().isEmpty()) {
+            formatted.append(baseDescription).append("\n\n");
+        }
+        
+        // Objectifs Pédagogiques
+        formatted.append("🎯 OBJECTIFS PÉDAGOGIQUES\n");
+        formatted.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
+        formatted.append("• Comprendre les principes fondamentaux de la gestion financière\n\n");
+        formatted.append("• Maîtriser les outils et techniques de planification budgétaire\n\n");
+        formatted.append("• Développer des compétences en analyse financière personnelle\n\n");
+        formatted.append("• Appliquer les meilleures pratiques de gestion de patrimoine\n\n\n");
+        
+        // Points Clés du Module
+        formatted.append("✨ POINTS CLÉS DU MODULE\n");
+        formatted.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
+        formatted.append("📊 Analyse Budgétaire\n");
+        formatted.append("   Techniques d'analyse des revenus et dépenses\n\n");
+        formatted.append("💰 Épargne Stratégique\n");
+        formatted.append("   Méthodes d'optimisation de l'épargne\n\n");
+        formatted.append("📈 Planification Financière\n");
+        formatted.append("   Élaboration de plans financiers à court et long terme\n\n");
+        formatted.append("🎓 Cas Pratiques\n");
+        formatted.append("   Exercices et simulations réelles\n\n\n");
+        
+        // Résultats d'Apprentissage
+        formatted.append("🏆 RÉSULTATS D'APPRENTISSAGE\n");
+        formatted.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
+        formatted.append("✓ Capacité à créer et gérer un budget personnel efficace\n\n");
+        formatted.append("✓ Compétence en identification et réduction des dépenses superflues\n\n");
+        formatted.append("✓ Maîtrise des outils de suivi financier et tableaux de bord\n\n");
+        formatted.append("✓ Aptitude à prendre des décisions financières éclairées\n");
+        
+        return formatted.toString();
     }
 
-    @FXML
-    private void apply() {
-        String key = (tfSearch.getText() == null) ? "" : tfSearch.getText().toLowerCase().trim();
-        filtered.setPredicate(c -> {
-            if (key.isEmpty()) return true;
-            String nom = (c.getNomCours() == null) ? "" : c.getNomCours().toLowerCase();
-            String desc = (c.getDescription() == null) ? "" : c.getDescription().toLowerCase();
-            return nom.contains(key) || desc.contains(key);
-        });
-    }
+    private void refreshQuizzes() {
+        if (cours == null) return;
 
-    @FXML
-    private void reset() {
-        tfSearch.clear();
-        filtered.setPredicate(c -> true);
-    }
-
-    @FXML
-    private void refresh() {
+        quizContainer.getChildren().clear();
         try {
-            data.setAll(service.getAll());
-            apply();
-        } catch (Exception e) {
+            List<Quiz> quizzes = serviceQuiz.getByCoursId(cours.getIdCours());
+            for (Quiz q : quizzes) {
+                quizContainer.getChildren().add(buildQuizCard(q));
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Erreur MySQL: " + e.getMessage()).showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Erreur chargement quiz: " + e.getMessage()).showAndWait();
         }
     }
 
-    @FXML private void goHome() { System.out.println("Home clicked"); }
-    @FXML private void goAfficherCours() { refresh(); }
+    private Node buildQuizCard(Quiz q) {
+        VBox card = new VBox(6);
+        card.setStyle("-fx-padding: 12; -fx-background-color: white; -fx-background-radius: 10; "
+                + "-fx-border-radius: 10; -fx-border-color: #E0E0E0;");
 
-    @FXML
-    private void goAjouterCours() throws Exception {
-        switchTo("/AjouterCours.fxml");
+        Label titre = new Label(q.getTitre());
+        titre.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        Label score = new Label("⭐ Score: " + q.getScoreDeQuiz());
+        score.setStyle("-fx-text-fill: #F59E0B; -fx-font-weight: bold;");
+        Label date = new Label("📅 Créé le: " + q.getDateCreation());
+
+        Button btnModifier = new Button("Modifier");
+        Button btnSupprimer = new Button("Supprimer");
+        btnSupprimer.setStyle("-fx-background-color: #d32f2f; -fx-text-fill: white;");
+
+        btnModifier.setOnAction(e -> openModifierQuiz(q));
+        btnSupprimer.setOnAction(e -> {
+            try {
+                serviceQuiz.delete(q.getIdQuiz());
+                refreshQuizzes();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Erreur suppression: " + ex.getMessage()).showAndWait();
+            }
+        });
+
+        HBox actions = new HBox(10, btnModifier, btnSupprimer);
+        card.getChildren().addAll(titre, score, date, actions);
+        return card;
     }
 
     @FXML
-    private void goListeQuiz() throws Exception {
-        switchTo("/ListeQuiz.fxml");
+    private void onAjouterQuiz() {
+        openAjouterQuiz();
     }
 
     @FXML
-    private void goPanier() throws Exception {
-        switchTo("/Panier.fxml");
+    private void goListeCours() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/ListeCours.fxml"));
+            Stage stage = (Stage) lblNomCours.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Erreur navigation: " + e.getMessage()).showAndWait();
+        }
     }
 
-    private void switchTo(String fxml) throws Exception {
-        Stage stage = (Stage) listViewCours.getScene().getWindow();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-        stage.setScene(new Scene(loader.load()));
+    private void openAjouterQuiz() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ajouterQuiz.fxml"));
+            Parent root = loader.load();
+
+            AjouterQuiz controller = loader.getController();
+            controller.setIdCours(cours.getIdCours());
+
+            Stage stage = new Stage();
+            stage.setTitle("Ajouter Quiz");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Erreur ouverture AjouterQuiz: " + e.getMessage()).showAndWait();
+        }
     }
 
-    @FXML
-    private void goAjouterAvis() throws Exception {
-        switchTo("/Panier.fxml");
+    private void openModifierQuiz(Quiz quiz) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierQuiz.fxml"));
+            Parent root = loader.load();
+
+            ModifierQuiz controller = loader.getController();
+            controller.setQuiz(quiz);
+
+            Stage stage = new Stage();
+            stage.setTitle("Modifier Quiz");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Erreur ouverture ModifierQuiz: " + e.getMessage()).showAndWait();
+        }
     }
-
-
 }

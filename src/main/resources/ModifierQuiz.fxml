@@ -76,7 +76,15 @@
                            styleClass="input"
                            GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
-                <HBox spacing="10" GridPane.rowIndex="6" GridPane.columnIndex="1">
+                <Label text="Mode Examen:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <CheckBox fx:id="cbExamMode" text="Activer le mode examen avec chronomètre"
+                          GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                <Label text="Temps limite (minutes):" GridPane.rowIndex="7" GridPane.columnIndex="0" fx:id="lblTimeLimit"/>
+                <TextField fx:id="tfTimeLimit" promptText="Ex: 5" styleClass="input"
+                           GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+                <HBox spacing="10" GridPane.rowIndex="8" GridPane.columnIndex="1">
                     <Button text="Enregistrer" styleClass="primary-btn" onAction="#save"/>
                     <Button text="Annuler" styleClass="ghost-btn" onAction="#goListeQuiz"/>
                 </HBox>

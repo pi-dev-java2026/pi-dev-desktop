@@ -1,11 +1,11 @@
-package com.gestion;
+package user.controllers;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class UserMain extends Application {
 
     private static Stage primaryStage;
 
@@ -13,16 +13,16 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         primaryStage = stage;
 
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/ListeCours.fxml"));
+        FXMLLoader loader = new FXMLLoader(UserMain.class.getResource("/user/EducationHome.fxml"));
         Scene scene = new Scene(loader.load());
 
-        stage.setTitle("Gestion Educative");
+        stage.setTitle("DINARI - Student Portal");
         stage.setScene(scene);
         stage.show();
     }
 
     public static void switchScene(String fxml) throws Exception {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/" + fxml));
+        FXMLLoader loader = new FXMLLoader(UserMain.class.getResource("/user/" + fxml));
         primaryStage.setScene(new Scene(loader.load()));
     }
 

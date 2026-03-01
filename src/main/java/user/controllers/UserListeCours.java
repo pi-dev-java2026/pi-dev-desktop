@@ -1,4 +1,4 @@
-package controllers;
+package user.controllers;
 
 import com.gestion.Services.ServiceCours;
 import com.gestion.entities.Cours;
@@ -14,7 +14,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class ListeCours {
+public class UserListeCours {
 
     @FXML
     private TextField tfSearch;
@@ -57,20 +57,12 @@ public class ListeCours {
                 VBox left = new VBox(6, title, desc, date);
                 HBox.setHgrow(left, Priority.ALWAYS);
 
-                Button btnView = new Button("Afficher");
-                btnView.getStyleClass().add("link-btn");
+                Button btnView = new Button("📖 Voir Détails");
+                btnView.getStyleClass().add("primary-btn");
                 btnView.setOnAction(e -> onView(c));
 
-                Button btnEdit = new Button("Modifier");
-                btnEdit.getStyleClass().add("link-btn");
-                btnEdit.setOnAction(e -> onEdit(c));
-
-                Button btnDelete = new Button("Supprimer");
-                btnDelete.getStyleClass().add("danger-btn");
-                btnDelete.setOnAction(e -> onDelete(c));
-
-                VBox right = new VBox(8, btnView, btnEdit, btnDelete);
-                right.setMinWidth(110);
+                VBox right = new VBox(8, btnView);
+                right.setMinWidth(130);
 
                 HBox row = new HBox(12, left, right);
                 VBox card = new VBox(row);
@@ -112,62 +104,29 @@ public class ListeCours {
             data.setAll(service.getAll());
         } catch (Exception e) {
             e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Erreur MySQL: " + e.getMessage()).showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Erreur: " + e.getMessage()).showAndWait();
         }
     }
 
     private void onView(Cours c) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherCours.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/user/UserAfficherCours.fxml"));
             Scene scene = new Scene(loader.load());
 
-            AfficherCours controller = loader.getController();
+            UserAfficherCours controller = loader.getController();
             controller.setCours(c);
 
             Stage stage = (Stage) listViewCours.getScene().getWindow();
             stage.setScene(scene);
         } catch (Exception e) {
             e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Erreur ouverture afficher: " + e.getMessage()).showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Erreur: " + e.getMessage()).showAndWait();
         }
-    }
-
-    private void onEdit(Cours c) {
-        try {
-            Stage stage = (Stage) listViewCours.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierCours.fxml"));
-            Scene scene = new Scene(loader.load());
-
-            ModifierCours controller = loader.getController();
-            controller.setCours(c);
-
-            stage.setScene(scene);
-        } catch (Exception e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Erreur ouverture modifier: " + e.getMessage()).showAndWait();
-        }
-    }
-
-    private void onDelete(Cours c) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Supprimer '" + safe(c.getNomCours()) + "' ?", ButtonType.YES, ButtonType.NO);
-
-        confirm.showAndWait().ifPresent(bt -> {
-            if (bt == ButtonType.YES) {
-                try {
-                    service.delete(c.getIdCours());
-                    refresh();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    new Alert(Alert.AlertType.ERROR, "Erreur suppression: " + e.getMessage()).showAndWait();
-                }
-            }
-        });
     }
 
     @FXML
     private void goHome() {
-        // Implement home navigation if needed
+        refresh();
     }
 
     @FXML
@@ -176,28 +135,13 @@ public class ListeCours {
     }
 
     @FXML
-    private void goListeQuiz() throws Exception {
-        switchTo("/ListeQuiz.fxml");
+    private void goMyQuizzes() throws Exception {
+        switchTo("/user/UserListeQuiz.fxml");
     }
 
     @FXML
-    private void goAjouterCours() throws Exception {
-        switchTo("/AjouterCours.fxml");
-    }
-
-    @FXML
-    private void goAjouterQuiz() throws Exception {
-        switchTo("/AjouterQuiz.fxml");
-    }
-
-    @FXML
-    private void goAjouterAvis() throws Exception {
-        switchTo("/AjouterAvis.fxml");
-    }
-
-    @FXML
-    private void goListeAvis() throws Exception {
-        switchTo("/ListeAvis.fxml");
+    private void goEducation() throws Exception {
+        switchTo("/user/EducationHome.fxml");
     }
 
     private void switchTo(String fxml) throws Exception {

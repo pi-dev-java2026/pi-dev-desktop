@@ -6,11 +6,10 @@ import com.gestion.entities.Cours;
 import com.gestion.entities.Quiz;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -27,10 +26,26 @@ public class AjouterQuiz {
     private final ServiceQuiz serviceQuiz = new ServiceQuiz();
     private final ServiceCours serviceCours = new ServiceCours();
 
+    private int forcedIdCours = -1;
+
+    private Runnable onSaved;
+
+    public void setIdCours(int idCours) {
+        this.forcedIdCours = idCours;
+
+        if (cbCours != null) {
+            cbCours.setDisable(true);
+            cbCours.setVisible(false);
+            cbCours.setManaged(false);
+        }
+    }
+
+    public void setOnSaved(Runnable onSaved) {
+        this.onSaved = onSaved;
+    }
+
     @FXML
     public void initialize() {
-
-
         cbCours.getStyleClass().add("input-combo");
 
         try {
@@ -52,7 +67,13 @@ public class AjouterQuiz {
                 }
             });
 
-            cbCours.setEditable(true);
+            cbCours.setEditable(false);
+
+            if (forcedIdCours > 0) {
+                cbCours.setDisable(true);
+                cbCours.setVisible(false);
+                cbCours.setManaged(false);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,18 +85,29 @@ public class AjouterQuiz {
     @FXML
     private void ajouterQuiz() {
         try {
-            Cours selected = cbCours.getValue();
             String titre = txt(tfTitre);
             String repsTxt = txt(tfReponses);
             String correcte = txt(tfCorrecte);
             String scoreTxt = txt(tfScore);
 
-            if (selected == null || titre.isEmpty() || repsTxt.isEmpty() || correcte.isEmpty() || scoreTxt.isEmpty()) {
+            if (titre.isEmpty() || repsTxt.isEmpty() || correcte.isEmpty() || scoreTxt.isEmpty()) {
                 new Alert(Alert.AlertType.ERROR, "Veuillez remplir tous les champs !").showAndWait();
                 return;
             }
 
-            int idCours = selected.getIdCours();
+            int idCours;
+
+            if (forcedIdCours > 0) {
+                idCours = forcedIdCours;
+            } else {
+                Cours selected = cbCours.getValue();
+                if (selected == null) {
+                    new Alert(Alert.AlertType.ERROR, "Veuillez choisir un cours !").showAndWait();
+                    return;
+                }
+                idCours = selected.getIdCours();
+            }
+
             int score = Integer.parseInt(scoreTxt);
 
             List<String> liste = Arrays.stream(repsTxt.split(";"))
@@ -93,20 +125,24 @@ public class AjouterQuiz {
 
             new Alert(Alert.AlertType.INFORMATION, "Quiz ajouté ✅ (id=" + id + ")").showAndWait();
 
-            cbCours.setValue(null);
-            tfTitre.clear();
-            tfReponses.clear();
-            tfCorrecte.clear();
-            tfScore.clear();
+            if (onSaved != null) onSaved.run();
 
-            goListeQuiz();
+            closeWindow();
 
         } catch (NumberFormatException e) {
-            new Alert(Alert.AlertType.ERROR, "Score لازم رقم.").showAndWait();
-        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Score invalide !").showAndWait();
+        } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Erreur MySQL: " + e.getMessage()).showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Erreur: " + e.getMessage()).showAndWait();
         }
+    }
+
+    private void closeWindow() {
+        Stage stage = (Stage) tfTitre.getScene().getWindow();
+        stage.close();
     }
 
     private String txt(TextField tf) {
@@ -115,15 +151,11 @@ public class AjouterQuiz {
 
     @FXML
     private void goListeQuiz() throws Exception {
-        Stage stage = (Stage) tfTitre.getScene().getWindow();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeQuiz.fxml"));
-        stage.setScene(new Scene(loader.load()));
+        closeWindow();
     }
 
     @FXML
     private void goListeCours() throws Exception {
-        Stage stage = (Stage) tfTitre.getScene().getWindow();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeCours.fxml"));
-        stage.setScene(new Scene(loader.load()));
+        closeWindow();
     }
 }

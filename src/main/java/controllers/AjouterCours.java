@@ -15,8 +15,7 @@ import java.time.LocalDate;
 public class AjouterCours {
 
     @FXML private TextField tfNom;
-    @FXML private TextField tfDescription;
-    @FXML private TextArea taContenu;
+    @FXML private TextArea taDescription;
 
     private final ServiceCours service = new ServiceCours();
 
@@ -24,30 +23,28 @@ public class AjouterCours {
     private void ajouterCours() {
 
         String nom = tfNom.getText() == null ? "" : tfNom.getText().trim();
-        String description = tfDescription.getText() == null ? "" : tfDescription.getText().trim();
-        String contenu = taContenu.getText() == null ? "" : taContenu.getText().trim();
+        String description = taDescription.getText() == null ? "" : taDescription.getText().trim();
 
-        if (nom.isEmpty() || description.isEmpty() || contenu.isEmpty()) {
+        if (nom.isEmpty() || description.isEmpty()) {
             new Alert(Alert.AlertType.ERROR, "Veuillez remplir tous les champs !").showAndWait();
             return;
         }
 
         try {
-            Cours c = new Cours(nom, contenu, description, LocalDate.now());
+            Cours c = new Cours(nom, description, LocalDate.now());
             int id = service.add(c);
 
             new Alert(Alert.AlertType.INFORMATION,
-                    "Cours ajouté avec succès ✅ (id=" + id + ")").showAndWait();
+                    "Module ajouté avec succès ✅ (id=" + id + ")").showAndWait();
 
             tfNom.clear();
-            tfDescription.clear();
-            taContenu.clear();
+            taDescription.clear();
 
             goListeCours();
 
         } catch (Exception e) {
             e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Erreur MySQL: " + e.getMessage()).showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Erreur: " + e.getMessage()).showAndWait();
         }
     }
 

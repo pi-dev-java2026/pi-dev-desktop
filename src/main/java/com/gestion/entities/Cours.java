@@ -6,23 +6,20 @@ public class Cours {
 
     private int idCours;
     private String nomCours;
-    private String contenu;
     private String description;
     private LocalDate dateCreation;
 
     public Cours() {}
 
-    public Cours(String nomCours, String contenu, String description, LocalDate dateCreation) {
+    public Cours(String nomCours, String description, LocalDate dateCreation) {
         this.nomCours = nomCours;
-        this.contenu = contenu;
         this.description = description;
         this.dateCreation = dateCreation;
     }
 
-    public Cours(int idCours, String nomCours, String contenu, String description, LocalDate dateCreation) {
+    public Cours(int idCours, String nomCours, String description, LocalDate dateCreation) {
         this.idCours = idCours;
         this.nomCours = nomCours;
-        this.contenu = contenu;
         this.description = description;
         this.dateCreation = dateCreation;
     }
@@ -32,9 +29,6 @@ public class Cours {
 
     public String getNomCours() { return nomCours; }
     public void setNomCours(String nomCours) { this.nomCours = nomCours; }
-
-    public String getContenu() { return contenu; }
-    public void setContenu(String contenu) { this.contenu = contenu; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

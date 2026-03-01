@@ -11,14 +11,13 @@ import java.util.List;
 public class ServiceCours {
 
     public int add(Cours c) throws SQLException {
-        String sql = "INSERT INTO cours(nom_cours, contenu, description, date_creation) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO cours(nom_cours, description, date_creation) VALUES (?, ?, ?)";
         try (Connection con = DB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, c.getNomCours());
-            ps.setString(2, c.getContenu());
-            ps.setString(3, c.getDescription());
-            ps.setDate(4, Date.valueOf(c.getDateCreation() != null ? c.getDateCreation() : LocalDate.now()));
+            ps.setString(2, c.getDescription());
+            ps.setDate(3, Date.valueOf(c.getDateCreation() != null ? c.getDateCreation() : LocalDate.now()));
 
             ps.executeUpdate();
 
@@ -30,7 +29,7 @@ public class ServiceCours {
     }
 
     public List<Cours> getAll() throws SQLException {
-        String sql = "SELECT id_cours, nom_cours, contenu, description, date_creation FROM cours ORDER BY id_cours DESC";
+        String sql = "SELECT id_cours, nom_cours, description, date_creation FROM cours ORDER BY id_cours DESC";
         List<Cours> list = new ArrayList<>();
 
         try (Connection con = DB.getConnection();
@@ -45,7 +44,7 @@ public class ServiceCours {
     }
 
     public Cours getById(int idCours) throws SQLException {
-        String sql = "SELECT id_cours, nom_cours, contenu, description, date_creation FROM cours WHERE id_cours = ?";
+        String sql = "SELECT id_cours, nom_cours, description, date_creation FROM cours WHERE id_cours = ?";
         try (Connection con = DB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -59,15 +58,14 @@ public class ServiceCours {
     }
 
     public boolean update(Cours c) throws SQLException {
-        String sql = "UPDATE cours SET nom_cours=?, contenu=?, description=?, date_creation=? WHERE id_cours=?";
+        String sql = "UPDATE cours SET nom_cours=?, description=?, date_creation=? WHERE id_cours=?";
         try (Connection con = DB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, c.getNomCours());
-            ps.setString(2, c.getContenu());
-            ps.setString(3, c.getDescription());
-            ps.setDate(4, Date.valueOf(c.getDateCreation() != null ? c.getDateCreation() : LocalDate.now()));
-            ps.setInt(5, c.getIdCours());
+            ps.setString(2, c.getDescription());
+            ps.setDate(3, Date.valueOf(c.getDateCreation() != null ? c.getDateCreation() : LocalDate.now()));
+            ps.setInt(4, c.getIdCours());
 
             return ps.executeUpdate() > 0;
         }
@@ -86,11 +84,10 @@ public class ServiceCours {
     private Cours mapCours(ResultSet rs) throws SQLException {
         int id = rs.getInt("id_cours");
         String nom = rs.getString("nom_cours");
-        String contenu = rs.getString("contenu");
         String desc = rs.getString("description");
         Date d = rs.getDate("date_creation");
         LocalDate dateCreation = (d != null) ? d.toLocalDate() : null;
 
-        return new Cours(id, nom, contenu, desc, dateCreation);
+        return new Cours(id, nom, desc, dateCreation);
     }
 }
