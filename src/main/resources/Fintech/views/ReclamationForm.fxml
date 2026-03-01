@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="700.0" prefWidth="500.0" styleClass="login-container" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Fintech.controllers.ReclamationFormController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="50.0" layoutY="50.0" prefHeight="600.0" prefWidth="400.0" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="40.0">
+         <children>
+            <!-- Logo Area -->
+            <HBox alignment="CENTER" spacing="0" styleClass="logo-container">
+               <children>
+                   <Label styleClass="logo-text-id" text="ID" />
+                   <Label styleClass="logo-text-dinari" text="INARI" />
+               </children>
+            </HBox>
+
+            <!-- Title -->
+            <Label styleClass="welcome-title" text="Créer une Réclamation" />
+            <Label styleClass="welcome-subtitle" text="Soumettez votre réclamation en remplissant les informations ci-dessous" />
+            
+            <!-- Email Field -->
+            <VBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <Label styleClass="field-label" text="Email" />
+                  <HBox alignment="CENTER_LEFT" styleClass="input-box">
+                      <Label styleClass="input-icon" text="✉" />
+                      <TextField fx:id="emailField" promptText="nom@exemple.com" styleClass="input-field-inner" HBox.hgrow="ALWAYS" />
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </VBox>
+            
+            <!-- Subject Field -->
+            <VBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <Label styleClass="field-label" text="Sujet" />
+                  <HBox alignment="CENTER_LEFT" styleClass="input-box">
+                      <Label styleClass="input-icon" text="📋" />
+                      <TextField fx:id="subjectField" promptText="Entrez le sujet de la réclamation" styleClass="input-field-inner" HBox.hgrow="ALWAYS" />
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </VBox>
+            
+            <!-- Description Field -->
+            <VBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <Label styleClass="field-label" text="Description" />
+                  <VBox styleClass="input-box" alignment="TOP_LEFT">
+                     <children>
+                        <HBox alignment="TOP_LEFT" spacing="5.0">
+                           <children>
+                              <Label styleClass="input-icon" text="📝" />
+                              <TextArea fx:id="descriptionField" promptText="Décrivez votre réclamation en détail..." styleClass="input-field-inner" wrapText="true" prefRowCount="5" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </VBox>
+            
+            <!-- Action Buttons -->
+            <HBox alignment="CENTER" spacing="15.0">
+               <children>
+                  <Button fx:id="submitButton" mnemonicParsing="false" onAction="#handleSubmit" prefWidth="150.0" styleClass="login-btn" text="Soumettre">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="clearButton" mnemonicParsing="false" onAction="#handleClear" prefWidth="150.0" styleClass="social-btn" text="Effacer">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="25.0" bottom="10.0" />
+               </VBox.margin>
+            </HBox>
+            
+            <!-- Back Button -->
+            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="social-btn" text="← Retour" prefWidth="320.0">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </Button>
+            
+            <!-- Footer -->
+            <Label styleClass="footer-text" text="GÉREZ VOS RÉCLAMATIONS AVEC DINARI" wrapText="true" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Fintech.controllers.MainDashboardController"
+            prefHeight="700.0" prefWidth="1000.0">
+
+    <stylesheets>
+        <URL value="@styles.css" />
+    </stylesheets>
+
+    <!-- Sidebar -->
+    <left>
+        <VBox spacing="10" styleClass="sidebar" prefWidth="250">
+            <Label text="Fintech App" styleClass="sidebar-title"/>
+            
+            <VBox spacing="5">
+                <Button text="Dashboard" onAction="#showDashboard" maxWidth="Infinity" styleClass="sidebar-button"/>
+                <Button text="User Management" onAction="#showUsers" maxWidth="Infinity" styleClass="sidebar-button"/>
+                <Button text="Réclamations" onAction="#showReclamations" maxWidth="Infinity" styleClass="sidebar-button"/>
+                <Button text="Reports" maxWidth="Infinity" styleClass="sidebar-button"/>
+                <Button text="Settings" maxWidth="Infinity" styleClass="sidebar-button"/>
+            </VBox>
+            
+            <Region VBox.vgrow="ALWAYS"/>
+            
+            <Button text="Logout" maxWidth="Infinity" styleClass="sidebar-button"/>
+        </VBox>
+    </left>
+
+    <!-- Main Content Area -->
+    <center>
+        <BorderPane>
+            <!-- Top Bar -->
+            <top>
+                <HBox styleClass="top-bar" alignment="CENTER_RIGHT" spacing="20">
+                    <TextField promptText="Search here..." style="-fx-background-radius: 20;"/>
+                    <Label text="Welcome, Admin" style="-fx-font-weight: bold;"/>
+                    <!-- Placeholder for Avatar -->
+                    <StackPane style="-fx-background-color: #ccc; -fx-background-radius: 50; -fx-min-width: 35; -fx-min-height: 35;">
+                        <Label text="A" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+                    </StackPane>
+                </HBox>
+            </top>
+            
+            <!-- Dynamic View Container -->
+            <center>
+                <StackPane fx:id="contentArea" style="-fx-background-color: #f4f6f9;">
+                    <!-- Views will be loaded here -->
+                </StackPane>
+            </center>
+        </BorderPane>
+    </center>
+
+</BorderPane>

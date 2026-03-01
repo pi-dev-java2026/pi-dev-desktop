@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="700.0" prefWidth="500.0" styleClass="login-container" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Fintech.controllers.UserFormController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="50.0" layoutY="50.0" prefHeight="600.0" prefWidth="400.0" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="40.0">
+         <children>
+            <!-- Logo Area -->
+            <HBox alignment="CENTER" spacing="0" styleClass="logo-container">
+               <children>
+                   <Label styleClass="logo-text-id" text="ID" />
+                   <Label styleClass="logo-text-dinari" text="INARI" />
+               </children>
+            </HBox>
+
+            <!-- Title -->
+            <Label styleClass="welcome-title" text="Gestion Utilisateur" />
+            <Label styleClass="welcome-subtitle" text="Ajoutez ou modifiez les informations utilisateur" />
+            
+            <!-- Full Name Field -->
+            <VBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <Label styleClass="field-label" text="Nom complet" />
+                  <HBox alignment="CENTER_LEFT" styleClass="input-box">
+                      <Label styleClass="input-icon" text="👤" />
+                      <TextField fx:id="nameField" promptText="Entrez le nom complet" styleClass="input-field-inner" HBox.hgrow="ALWAYS" />
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </VBox>
+            
+            <!-- Email Field -->
+            <VBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <Label styleClass="field-label" text="Email" />
+                  <HBox alignment="CENTER_LEFT" styleClass="input-box">
+                      <Label styleClass="input-icon" text="✉" />
+                      <TextField fx:id="emailField" promptText="nom@exemple.com" styleClass="input-field-inner" HBox.hgrow="ALWAYS" />
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </VBox>
+            
+            <!-- Phone Field -->
+            <VBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <Label styleClass="field-label" text="Téléphone" />
+                  <HBox alignment="CENTER_LEFT" styleClass="input-box">
+                      <Label styleClass="input-icon" text="📱" />
+                      <TextField fx:id="phoneField" promptText="Entrez le numéro de téléphone" styleClass="input-field-inner" HBox.hgrow="ALWAYS" />
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </VBox>
+            
+            <!-- Password Field -->
+            <VBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <Label styleClass="field-label" text="Mot de passe" />
+                  <HBox alignment="CENTER_LEFT" styleClass="input-box">
+                      <Label styleClass="input-icon" text="🔒" />
+                      <PasswordField fx:id="passwordField" promptText="........" styleClass="input-field-inner" HBox.hgrow="ALWAYS" />
+                      <Label styleClass="input-icon" text="👁" />
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </VBox>
+            
+            <!-- Role Field -->
+            <VBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <Label styleClass="field-label" text="Rôle" />
+                  <HBox alignment="CENTER_LEFT" styleClass="input-box">
+                      <Label styleClass="input-icon" text="⚙" />
+                      <ComboBox fx:id="roleComboBox" promptText="Sélectionner un rôle" styleClass="input-field-inner" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </VBox>
+            
+            <!-- Action Buttons -->
+            <HBox alignment="CENTER" spacing="15.0">
+               <children>
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSave" prefWidth="150.0" styleClass="login-btn" text="Enregistrer">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="clearButton" mnemonicParsing="false" onAction="#handleClear" prefWidth="150.0" styleClass="social-btn" text="Effacer">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="25.0" bottom="10.0" />
+               </VBox.margin>
+            </HBox>
+            
+            <!-- Footer -->
+            <Label styleClass="footer-text" text="GÉREZ VOS UTILISATEURS AVEC DINARI" wrapText="true" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

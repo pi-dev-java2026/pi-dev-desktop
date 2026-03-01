@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1"
+            styleClass="root">
+    
+    <stylesheets>
+        <URL value="@styles.css" />
+    </stylesheets>
+
+    <content>
+        <VBox spacing="30" style="-fx-padding: 30;">
+            <Label text="Overview" styleClass="header-label" style="-fx-alignment: CENTER_LEFT;"/>
+
+            <!-- Summary Cards -->
+            <FlowPane hgap="20" vgap="20">
+                <VBox styleClass="card-summary">
+                    <Label text="Total Users" styleClass="card-title"/>
+                    <Label text="1,245" styleClass="card-value"/>
+                    <Label text="+5% from last month" style="-fx-text-fill: #27ae60; -fx-font-size: 12px;"/>
+                </VBox>
+
+                <VBox styleClass="card-summary">
+                    <Label text="Active Users" styleClass="card-title"/>
+                    <Label text="1,081" styleClass="card-value"/>
+                    <Label text="+8% from last week" style="-fx-text-fill: #27ae60; -fx-font-size: 12px;"/>
+                </VBox>
+
+                <VBox styleClass="card-summary">
+                    <Label text="Pending Requests" styleClass="card-title"/>
+                    <Label text="34" styleClass="card-value"/>
+                    <Label text="-2% from yesterday" style="-fx-text-fill: #e74c3c; -fx-font-size: 12px;"/>
+                </VBox>
+                 <VBox styleClass="card-summary">
+                    <Label text="Total Revenue" styleClass="card-title"/>
+                    <Label text="$45,200" styleClass="card-value"/>
+                     <Label text="+12% from last month" style="-fx-text-fill: #27ae60; -fx-font-size: 12px;"/>
+                </VBox>
+            </FlowPane>
+
+            <!-- Placeholder for recent activity or chart -->
+            <VBox styleClass="card" spacing="15">
+                <Label text="Recent Activity" styleClass="section-header"/>
+                <Label text="User 'John Doe' logged in" styleClass="label"/>
+                <Separator/>
+                <Label text="User 'Jane Smith' updated profile" styleClass="label"/>
+                <Separator/>
+                <Label text="New user execution registered" styleClass="label"/>
+            </VBox>
+
+        </VBox>
+    </content>
+</ScrollPane>
