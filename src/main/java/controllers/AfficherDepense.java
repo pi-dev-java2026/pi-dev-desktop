@@ -26,7 +26,7 @@ public class AfficherDepense {
     @FXML private VBox vboxDepenses;
     private ServiceDepense service = new ServiceDepense();
     @FXML private ComboBox<String> categorieCombo;
-     @FXML private ComboBox<String> paiementBox;
+    @FXML private ComboBox<String> paiementBox;
     @FXML
     private TextField montantField;
 
@@ -42,7 +42,7 @@ public class AfficherDepense {
         triTypeCombo.setValue("ASC"); // valeur par défaut
         categorieCombo.getItems().addAll("","Nourriture", "Transport", "Loyer", "Internet", "Autre");
         paiementBox.getItems().addAll("","Espèces", "Carte bancaire", "Virement");
-         loadDepenses();
+        loadDepenses();
     }
 
 
@@ -148,7 +148,7 @@ public class AfficherDepense {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-         //   loadDepenses(); // refresh après modification
+            //   loadDepenses(); // refresh après modification
 
         } catch (IOException e) {
             e.printStackTrace();

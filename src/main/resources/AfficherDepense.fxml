@@ -9,17 +9,15 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controllers.AfficherDepense">
 
-    <!-- (اختياري) Top فارغ -->
     <top>
         <Region/>
     </top>
 
-    <!-- ✅ SIDEBAR الجديدة (كيف الصورة) -->
+    <!-- ✅ Sidebar (ما تبدّلش) -->
     <left>
         <VBox prefWidth="235" minWidth="235"
               style="-fx-background-color: #0f1f3d;">
 
-            <!-- Header -->
             <VBox alignment="CENTER" prefHeight="115"
                   style="-fx-background-color: #0a1628; -fx-padding: 18;">
                 <Label text="DINARI"
@@ -30,7 +28,6 @@
 
             <Separator style="-fx-background-color: #1a3055;"/>
 
-            <!-- Menu -->
             <VBox spacing="3" style="-fx-padding: 18 10 0 10;">
 
                 <Button fx:id="btnAbonnements" text="📺   Abonnements" maxWidth="Infinity"
@@ -45,7 +42,6 @@
                                -fx-font-size: 12px; -fx-alignment: CENTER-LEFT;
                                -fx-padding: 12 15; -fx-background-radius: 8; -fx-cursor: hand;"/>
 
-                <!-- ACTIVE -->
                 <Button fx:id="btnDepenses" text="💸   Dépenses" maxWidth="Infinity"
                         onAction="#showDepenses"
                         style="-fx-background-color: #1a3a7a; -fx-text-fill: white;
@@ -63,7 +59,6 @@
 
             <Region VBox.vgrow="ALWAYS"/>
 
-            <!-- Footer user -->
             <VBox style="-fx-padding: 10;">
                 <Separator style="-fx-background-color: #1a3055;"/>
                 <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 12 10 5 10;">
@@ -79,81 +74,97 @@
         </VBox>
     </left>
 
-    <!-- ✅ Content area (نفس متاعك) -->
+    <!-- ✅ Center Modern -->
     <center>
-        <VBox spacing="10" style="-fx-padding:20;">
+        <VBox spacing="14" style="-fx-padding:20;">
 
-            <!-- Barre recherche & tri -->
-            <HBox spacing="15" style="-fx-padding:5; -fx-alignment:center-left;">
+            <!-- Header Card -->
+            <VBox spacing="6"
+                  style="-fx-background-color:white; -fx-background-radius:14; -fx-padding:16;
+                         -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.2, 0, 2);">
 
-                <VBox spacing="3">
-                    <Label text="Montant" style="-fx-font-weight:bold;"/>
-                    <TextField fx:id="montantField" promptText="Montant"/>
-                </VBox>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="📋 Liste des Dépenses"
+                           style="-fx-font-size:22px; -fx-font-weight:800; -fx-text-fill:#243b53;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
 
-                <VBox spacing="3">
-                    <Label text="Mode de paiement" style="-fx-font-weight:bold;"/>
-                    <ComboBox fx:id="paiementBox"/>
-                </VBox>
+                    <Button text="📊 Prédiction IA" onAction="#showDashboard"
+                            style="-fx-background-color:#2f80ed; -fx-text-fill:white; -fx-font-weight:bold;
+                                   -fx-padding:8 14; -fx-background-radius:10; -fx-cursor: hand;"/>
 
-                <VBox spacing="3">
-                    <Label text="Catégorie" style="-fx-font-weight:bold;"/>
-                    <ComboBox fx:id="categorieCombo"/>
-                </VBox>
+                    <Button text="➕ Ajouter Dépense" onAction="#openAjouterDepense"
+                            style="-fx-background-color:#2f80ed; -fx-text-fill:white; -fx-font-weight:bold;
+                                   -fx-padding:8 14; -fx-background-radius:10; -fx-cursor: hand;"/>
 
-                <VBox spacing="3">
-                    <Label text="Trier par champ" style="-fx-font-weight:bold;"/>
-                    <ComboBox fx:id="triChampCombo" promptText="Champ"/>
-                </VBox>
+                    <Button text="Historique" onAction="#HistoriqueDepense"
+                            style="-fx-background-color:#f3f4f6; -fx-text-fill:#334e68; -fx-font-weight:bold;
+                                   -fx-padding:8 14; -fx-background-radius:10; -fx-cursor: hand;"/>
+                </HBox>
 
-                <VBox spacing="3">
-                    <Label text="Type de tri" style="-fx-font-weight:bold;"/>
-                    <ComboBox fx:id="triTypeCombo" promptText="ASC/DESC"/>
-                </VBox>
+                <Label text="Filtrer et trier vos dépenses rapidement."
+                       style="-fx-text-fill:#7b8794; -fx-font-size:12px;"/>
+            </VBox>
 
-                <VBox spacing="3">
-                    <Label text=""/>
-                    <Button onAction="#filterDepenses" text="Filtrer"/>
-                </VBox>
+            <!-- Filter Card -->
+            <VBox spacing="10"
+                  style="-fx-background-color:white; -fx-background-radius:14; -fx-padding:14;
+                         -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0.2, 0, 2);">
 
-            </HBox>
+                <HBox spacing="12" alignment="CENTER_LEFT">
 
-            <!-- Titre + boutons -->
-            <HBox spacing="10" style="-fx-alignment:center-left;">
-                <Label style="-fx-font-size:26px; -fx-font-weight:bold; -fx-text-fill:#2C3E50;"
-                       text="📋 Liste des Dépenses"/>
-
-                <Region HBox.hgrow="ALWAYS"/>
-
-                <Button text="📊 Prédiction IA"
-                        onAction="#showDashboard"
-                        style="-fx-background-color: linear-gradient(to right,#2C3E50,#4A90E2);
-                               -fx-text-fill:white; -fx-font-weight:bold;
-                               -fx-padding:8 15 8 15; -fx-background-radius:8; -fx-cursor: hand;"/>
-
-                <Button text="➕ Ajouter Dépense"
-                        onAction="#openAjouterDepense"
-                        style="-fx-background-color: linear-gradient(to right,#2C3E50,#4A90E2);
-                               -fx-text-fill:white; -fx-font-weight:bold;
-                               -fx-padding:8 15 8 15; -fx-background-radius:8; -fx-cursor: hand;"/>
-
-                <Button text="Historique"
-                        onAction="#HistoriqueDepense"
-                        style="-fx-background-color: linear-gradient(to right,#2C3E50,#4A90E2);
-                               -fx-text-fill:white; -fx-font-weight:bold;
-                               -fx-padding:8 15 8 15; -fx-background-radius:8; -fx-cursor: hand;"/>
-            </HBox>
-
-            <!-- Scrollable VBox pour les cartes -->
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
-                        style="-fx-background-color:transparent;"
-                        vbarPolicy="AS_NEEDED">
-                <content>
-                    <VBox fx:id="vboxDepenses" spacing="15" style="-fx-padding:10;">
-                        <!-- cartes dynamiques -->
+                    <VBox spacing="4">
+                        <Label text="Montant" style="-fx-font-weight:700; -fx-text-fill:#52606d;"/>
+                        <TextField fx:id="montantField" promptText="Ex: 50"
+                                   style="-fx-background-radius:10; -fx-padding:8 10;"/>
                     </VBox>
-                </content>
-            </ScrollPane>
+
+                    <VBox spacing="4">
+                        <Label text="Mode de paiement" style="-fx-font-weight:700; -fx-text-fill:#52606d;"/>
+                        <ComboBox fx:id="paiementBox" style="-fx-background-radius:10;"/>
+                    </VBox>
+
+                    <VBox spacing="4">
+                        <Label text="Catégorie" style="-fx-font-weight:700; -fx-text-fill:#52606d;"/>
+                        <ComboBox fx:id="categorieCombo" style="-fx-background-radius:10;"/>
+                    </VBox>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <VBox spacing="4">
+                        <Label text="Trier" style="-fx-font-weight:700; -fx-text-fill:#52606d;"/>
+                        <HBox spacing="8">
+                            <ComboBox fx:id="triChampCombo" style="-fx-background-radius:10;"/>
+                            <ComboBox fx:id="triTypeCombo" style="-fx-background-radius:10;"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- زر Filtrer (اختياري) -->
+                    <VBox spacing="4">
+                        <Label text=""/>
+                        <Button text="Filtrer" onAction="#filterDepenses"
+                                style="-fx-background-color:#f3f4f6; -fx-text-fill:#334e68; -fx-font-weight:bold;
+                                       -fx-padding:8 14; -fx-background-radius:10; -fx-cursor: hand;"/>
+                    </VBox>
+
+                </HBox>
+            </VBox>
+
+            <!-- Liste Card -->
+            <VBox spacing="10"
+                  style="-fx-background-color:white; -fx-background-radius:14; -fx-padding:10;
+                         -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0.2, 0, 2);">
+
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                            style="-fx-background-color:transparent;"
+                            vbarPolicy="AS_NEEDED">
+                    <content>
+                        <VBox fx:id="vboxDepenses" spacing="15" style="-fx-padding:10;">
+                            <!-- cartes dynamiques -->
+                        </VBox>
+                    </content>
+                </ScrollPane>
+
+            </VBox>
 
         </VBox>
     </center>
