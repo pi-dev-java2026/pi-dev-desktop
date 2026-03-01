@@ -30,25 +30,43 @@
                 <ColumnConstraints percentWidth="50"/>
             </columnConstraints>
 
+            <!-- Description -->
             <VBox spacing="6" GridPane.rowIndex="0" GridPane.columnIndex="0">
                 <Label text="Description *"/>
                 <TextField fx:id="descriptionTF" styleClass="input"/>
             </VBox>
 
+            <!-- Montant + Devise -->
             <VBox spacing="6" GridPane.rowIndex="0" GridPane.columnIndex="1">
                 <Label text="Montant *"/>
                 <TextField fx:id="montantTF" styleClass="input"/>
+                <ComboBox fx:id="deviseCB" promptText="Devise" styleClass="input"/>
             </VBox>
 
+            <!-- Date -->
             <VBox spacing="6" GridPane.rowIndex="1" GridPane.columnIndex="0">
                 <Label text="Date *"/>
                 <DatePicker fx:id="dateDP" styleClass="input"/>
             </VBox>
 
+            <!-- Catégorie -->
             <VBox spacing="6" GridPane.rowIndex="1" GridPane.columnIndex="1">
-                <Label text="Statut *"/>
-                <ComboBox fx:id="statutCB" styleClass="input"/>
+                <Label text="Catégorie *"/>
+                <ComboBox fx:id="categorieCB" styleClass="input"/>
             </VBox>
+
+            <!-- Fréquence -->
+            <VBox spacing="6" GridPane.rowIndex="2" GridPane.columnIndex="0">
+                <Label text="Fréquence"/>
+                <ComboBox fx:id="frequenceCB" styleClass="input"/>
+            </VBox>
+
+            <!-- Fin récurrence -->
+            <VBox spacing="6" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                <Label text="Fin récurrence"/>
+                <DatePicker fx:id="finRecDP" styleClass="input"/>
+            </VBox>
+
         </GridPane>
 
         <HBox spacing="12">

@@ -78,4 +78,70 @@ public class ServicePlanification implements IService<Planification> {
 
         return planifications;
     }
+    public double getMontantAlloue(String categorie, String mois) throws SQLException {
+        String sql = "SELECT montant_alloue FROM planification WHERE categorie = ? AND mois = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, categorie);
+        ps.setString(2, mois);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) return rs.getDouble("montant_alloue");
+        return 0;
+    }
+
+
+    public boolean existsPlanification(String categorie, String moisYYYYMM) throws SQLException {
+        String sql = "SELECT 1 FROM planification WHERE categorie = ? AND mois = ? LIMIT 1";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, categorie);
+        ps.setString(2, moisYYYYMM);
+        ResultSet rs = ps.executeQuery();
+        return rs.next();
+    }
+    public List<String> getDistinctCategories() throws SQLException {
+        List<String> cats = new ArrayList<>();
+
+        String sql = "SELECT DISTINCT categorie " +
+                "FROM planification " +
+                "WHERE categorie IS NOT NULL AND TRIM(categorie) <> '' " +
+                "ORDER BY categorie";
+
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            cats.add(rs.getString("categorie"));
+        }
+        return cats;
+    }
+    public List<String[]> getEvolutionCategorie(String categorie, String moisDebut, String moisFin) throws Exception {
+        List<String[]> res = new ArrayList<>();
+
+        String order =
+                "FIELD(mois,'janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre')";
+
+        String sql =
+                "SELECT mois, montant_alloue " +
+                        "FROM planification " +
+                        "WHERE categorie = ? " +
+                        "ORDER BY " + order;
+
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, categorie);
+
+        ResultSet rs = ps.executeQuery();
+
+        boolean started = false;
+        while (rs.next()) {
+            String mois = rs.getString("mois");
+            double montant = rs.getDouble("montant_alloue");
+
+            if (mois.equalsIgnoreCase(moisDebut)) started = true;
+            if (started) res.add(new String[]{mois, String.valueOf(montant)});
+            if (mois.equalsIgnoreCase(moisFin)) break;
+        }
+
+        return res;
+    }
+
+
 }

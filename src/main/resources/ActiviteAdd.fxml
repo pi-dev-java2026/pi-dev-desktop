@@ -14,10 +14,10 @@
     </padding>
 
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button text="← Retour" onAction="#goList" styleClass="secondary-btn"/>
+
         <VBox>
             <Label text="Ajouter une Activité" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
-            <Label text="Remplissez les informations ci-dessous" style="-fx-text-fill: #6c778a;"/>
+
         </VBox>
 
         <Region HBox.hgrow="ALWAYS"/>
@@ -34,24 +34,39 @@
                 <ColumnConstraints percentWidth="50"/>
             </columnConstraints>
 
+            <!-- Ligne 0 -->
             <VBox spacing="6" GridPane.rowIndex="0" GridPane.columnIndex="0">
                 <Label text="Description *"/>
-                <TextField fx:id="descriptionTF" promptText="Ex: Paiement facture STEG..." styleClass="input"/>
+                <TextField fx:id="descriptionTF" promptText="Ex: Loyer, Abonnement..." styleClass="input"/>
             </VBox>
 
             <VBox spacing="6" GridPane.rowIndex="0" GridPane.columnIndex="1">
                 <Label text="Montant *"/>
                 <TextField fx:id="montantTF" promptText="Ex: 120" styleClass="input"/>
+                <ComboBox fx:id="deviseCB" promptText="Devise"/>
             </VBox>
 
+            <!-- Ligne 1 -->
             <VBox spacing="6" GridPane.rowIndex="1" GridPane.columnIndex="0">
-                <Label text="Date *"/>
+                <Label text="Date début *"/>
                 <DatePicker fx:id="dateDP" styleClass="input"/>
+                <Button text="Vérifier météo" onAction="#checkMeteo"/>
             </VBox>
 
             <VBox spacing="6" GridPane.rowIndex="1" GridPane.columnIndex="1">
-                <Label text="Statut *"/>
-                <ComboBox fx:id="statutCB" promptText="Choisir statut" styleClass="input"/>
+                <Label text="Catégorie *"/>
+                <ComboBox fx:id="categorieCB" promptText="Choisir ou taper" editable="true" styleClass="input"/>
+            </VBox>
+
+            <!-- Ligne 2 -->
+            <VBox spacing="6" GridPane.rowIndex="2" GridPane.columnIndex="0">
+                <Label text="Fréquence"/>
+                <ComboBox fx:id="frequenceCB" promptText="AUCUNE / HEBDOMADAIRE / MENSUELLE" styleClass="input"/>
+            </VBox>
+
+            <VBox spacing="6" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                <Label text="Fin récurrence (si récurrente)"/>
+                <DatePicker fx:id="finRecDP" styleClass="input"/>
             </VBox>
         </GridPane>
 
@@ -60,8 +75,16 @@
                 <Insets top="10" right="0" bottom="0" left="0"/>
             </padding>
 
-            <Button text="Ajouter l'activité" onAction="#ajouter" styleClass="primary-btn"/>
+            <Button text="Ajouter" onAction="#ajouter" styleClass="primary-btn"/>
             <Button text="Annuler" onAction="#clear" styleClass="secondary-btn"/>
+            <Button text="📷 Scanner facture"
+                    onAction="#handleScanReceipt"
+                    styleClass="secondary-btn"/>
+
+
+
+
+
             <Label fx:id="msgLabel" style="-fx-text-fill: #d22;"/>
         </HBox>
     </VBox>

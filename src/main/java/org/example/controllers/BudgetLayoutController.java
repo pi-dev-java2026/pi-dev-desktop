@@ -83,4 +83,5 @@ public class BudgetLayoutController {
             b.getStyleClass().remove("selected");
         }
     }
+
 }

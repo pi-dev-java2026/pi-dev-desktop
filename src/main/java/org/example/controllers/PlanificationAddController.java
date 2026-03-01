@@ -49,7 +49,7 @@ public class PlanificationAddController {
         String priorite = prioriteCB.getValue();
         String mois = moisCB.getValue();
 
-        // validations
+
         if (categorie.isEmpty() || montantStr.isEmpty() || priorite == null || mois == null) {
             msgLabel.setText("Veuillez remplir tous les champs obligatoires (*).");
             return;
@@ -72,7 +72,7 @@ public class PlanificationAddController {
             service.ajouter(p);
 
             msgLabel.setStyle("-fx-text-fill: green;");
-            msgLabel.setText("Planification ajoutée ✅");
+            msgLabel.setText("Planification ajoutée");
 
             clear();
         } catch (Exception e) {

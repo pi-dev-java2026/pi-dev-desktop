@@ -13,25 +13,25 @@ import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
+import javafx.concurrent.Task;
+import org.example.ai.BudgetRiskPredictor;
+import org.example.utils.MyDataBase;
 
 public class PlanificationListController {
 
     @FXML private ListView<Planification> planifLV;
 
-
     @FXML private ComboBox<String> categorieCB;
     @FXML private ComboBox<String> prioriteCB;
     @FXML private ComboBox<String> moisCB;
 
-
     @FXML private TextField minTF;
     @FXML private TextField maxTF;
 
-
     @FXML private ComboBox<String> sortCB;
 
-
     @FXML private Label filterMsgLabel;
+    @FXML private TextField searchTF;
 
     private final ServicePlanification service = new ServicePlanification();
     private List<Planification> allPlanifs = new ArrayList<>();
@@ -40,12 +40,10 @@ public class PlanificationListController {
     public void initialize() {
         planifLV.setCellFactory(lv -> new PlanifCell());
 
-
         if (prioriteCB != null) {
             prioriteCB.getItems().setAll("Tous", "basse", "normale", "elevee");
             prioriteCB.setValue("Tous");
         }
-
 
         if (moisCB != null) {
             moisCB.getItems().clear();
@@ -58,7 +56,6 @@ public class PlanificationListController {
             }
             moisCB.setValue("Tous");
         }
-
 
         if (sortCB != null) {
             sortCB.getItems().setAll("Montant ↑ (croissant)", "Montant ↓ (décroissant)");
@@ -73,12 +70,12 @@ public class PlanificationListController {
         try {
             allPlanifs = service.afficher();
 
-
             fillCategorieCombo();
 
-            planifLV.getItems().setAll(allPlanifs);
-            if (filterMsgLabel != null) filterMsgLabel.setText("");
 
+            applyFilterSort();
+
+            if (filterMsgLabel != null) filterMsgLabel.setText("");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -100,7 +97,6 @@ public class PlanificationListController {
         categorieCB.setValue("Tous");
     }
 
-
     @FXML
     private void applyFilterSort() {
 
@@ -116,19 +112,14 @@ public class PlanificationListController {
         String minStr = (minTF == null || minTF.getText() == null) ? "" : minTF.getText().trim();
         String maxStr = (maxTF == null || maxTF.getText() == null) ? "" : maxTF.getText().trim();
 
+        String q = (searchTF == null || searchTF.getText() == null) ? "" : searchTF.getText().trim().toLowerCase();
+        boolean hasQ = !q.isEmpty();
+
         boolean hasCat = cat != null && !cat.equals("Tous");
         boolean hasPri = pri != null && !pri.equals("Tous");
         boolean hasMois = mois != null && !mois.equals("Tous");
         boolean hasMin = !minStr.isEmpty();
         boolean hasMax = !maxStr.isEmpty();
-
-
-        if (!(hasCat || hasPri || hasMois || hasMin || hasMax)) {
-            if (filterMsgLabel != null) {
-                filterMsgLabel.setText("Choisissez au moins un filtre (catégorie / priorité / mois / min / max).");
-            }
-            return;
-        }
 
 
         Double minValue = null;
@@ -147,18 +138,23 @@ public class PlanificationListController {
             return;
         }
 
-
         final Double minFinal = minValue;
         final Double maxFinal = maxValue;
 
+
         var stream = allPlanifs.stream()
-                // Catégorie
+
                 .filter(p -> !hasCat || (p.getCategorie() != null && p.getCategorie().equalsIgnoreCase(cat)))
-                // Priorité
+
                 .filter(p -> !hasPri || (p.getPriorite() != null && p.getPriorite().equalsIgnoreCase(pri)))
-                // Mois
+
                 .filter(p -> !hasMois || (p.getMois() != null && p.getMois().equalsIgnoreCase(mois)))
-                // Montant min/max
+
+                .filter(p -> !hasQ || (
+                        (p.getCategorie() != null && p.getCategorie().toLowerCase().contains(q)) ||
+                                (p.getMois() != null && p.getMois().toLowerCase().contains(q)) ||
+                                (p.getPriorite() != null && p.getPriorite().toLowerCase().contains(q))
+                ))
                 .filter(p -> minFinal == null || p.getMontantAlloue() >= minFinal)
                 .filter(p -> maxFinal == null || p.getMontantAlloue() <= maxFinal);
 
@@ -173,8 +169,12 @@ public class PlanificationListController {
         List<Planification> result = stream.toList();
         planifLV.getItems().setAll(result);
 
-        if (result.isEmpty() && filterMsgLabel != null) {
+
+        boolean anyFilterActive = hasCat || hasPri || hasMois || hasMin || hasMax;
+        if (result.isEmpty() && anyFilterActive && filterMsgLabel != null) {
             filterMsgLabel.setText("Aucun résultat.");
+        } else if (filterMsgLabel != null) {
+            filterMsgLabel.setText("");
         }
     }
 
@@ -191,7 +191,10 @@ public class PlanificationListController {
 
         if (filterMsgLabel != null) filterMsgLabel.setText("");
 
-        planifLV.getItems().setAll(allPlanifs);
+        if (searchTF != null) searchTF.clear();
+
+
+        applyFilterSort();
     }
 
     @FXML
@@ -258,8 +261,9 @@ public class PlanificationListController {
             Label montant = new Label("Montant: " + p.getMontantAlloue());
             Label priorite = new Label("Priorité: " + p.getPriorite());
             Label mois = new Label("Mois: " + (p.getMois() == null ? "" : p.getMois()));
-
-            VBox info = new VBox(4, title, montant, priorite, mois);
+            Label risk = new Label("Risque IA : -");
+            risk.setStyle("-fx-text-fill: #666; -fx-font-style: italic;");
+            VBox info = new VBox(4, title, montant, priorite, mois, risk);
 
             Button btnEdit = new Button("Modifier");
             btnEdit.getStyleClass().add("secondary-btn");
@@ -268,8 +272,11 @@ public class PlanificationListController {
             Button btnDel = new Button("Supprimer");
             btnDel.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 10;");
             btnDel.setOnAction(e -> deletePlanification(p));
+            Button btnIA = new Button("Analyser IA");
+            btnIA.setStyle("-fx-background-color: #2d89ef; -fx-text-fill: white; -fx-background-radius: 10;");
+            btnIA.setOnAction(e -> predictRiskAsync(p.getCategorie(), risk));
 
-            VBox actions = new VBox(8, btnEdit, btnDel);
+            VBox actions = new VBox(8, btnIA, btnEdit, btnDel);
             actions.setMinWidth(110);
 
             Region spacer = new Region();
@@ -281,5 +288,58 @@ public class PlanificationListController {
 
             setGraphic(root);
         }
+    }
+
+    private void loadInParent(String fxmlPath) {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/BudgetLayout.fxml"));
+
+            StackPane contentPane = (StackPane) planifLV.getScene().lookup("#contentPane");
+            if (contentPane == null) {
+                System.out.println("contentPane introuvable");
+                return;
+            }
+
+            Parent view = FXMLLoader.load(getClass().getResource(fxmlPath));
+            contentPane.getChildren().setAll(view);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void predictRiskAsync(String categorie, Label riskLabel) {
+
+        riskLabel.setText("Risque IA : calcul...");
+
+        Task<Double> task = new Task<>() {
+            @Override
+            protected Double call() throws Exception {
+                BudgetRiskPredictor predictor =
+                        new BudgetRiskPredictor(MyDataBase.getInstance().getMyConnection());
+                return predictor.predictForCategory(categorie);
+            }
+        };
+
+        task.setOnSucceeded(ev -> {
+            double proba = task.getValue(); // 0..1
+            String level;
+            String color;
+
+            if (proba < 0.4) { level = "Faible"; color = "#2ecc71"; }
+            else if (proba < 0.7) { level = "Moyen"; color = "#f39c12"; }
+            else { level = "Élevé"; color = "#e74c3c"; }
+
+            riskLabel.setText("Risque IA : " + String.format("%.2f", proba * 100) + "% (" + level + ")");
+            riskLabel.setStyle("-fx-text-fill: " + color + "; -fx-font-weight: bold;");
+        });
+
+        task.setOnFailed(ev -> {
+            riskLabel.setText("Risque IA : erreur");
+            riskLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+            task.getException().printStackTrace();
+        });
+
+        new Thread(task).start();
     }
 }

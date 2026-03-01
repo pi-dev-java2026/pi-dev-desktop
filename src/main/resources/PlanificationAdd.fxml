@@ -14,19 +14,25 @@
     </padding>
 
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button text="← Retour" onAction="#backToBudget" styleClass="secondary-btn"/>
+
         <VBox>
-            <Label text="Ajouter une Planification" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
-            <Label text="Remplissez les informations ci-dessous" style="-fx-text-fill: #6c778a;"/>
+            <Label text="Ajouter une Planification"
+                   style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+
+            <Label text="Remplissez les informations ci-dessous"
+                   style="-fx-text-fill: #6c778a;"/>
         </VBox>
 
         <Region HBox.hgrow="ALWAYS"/>
 
-        <Button text="Liste des planifications" onAction="#goList" styleClass="secondary-btn"/>
+        <Button text="Liste des planifications"
+                onAction="#goList"
+                styleClass="secondary-btn"/>
     </HBox>
 
     <VBox styleClass="card" spacing="14">
-        <Label text="Informations de la planification" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+        <Label text="Informations de la planification"
+               style="-fx-font-size: 16; -fx-font-weight: bold;"/>
 
         <GridPane hgap="14" vgap="12">
             <columnConstraints>
@@ -34,24 +40,39 @@
                 <ColumnConstraints percentWidth="50"/>
             </columnConstraints>
 
-            <VBox spacing="6" GridPane.rowIndex="0" GridPane.columnIndex="0">
+            <VBox spacing="6"
+                  GridPane.rowIndex="0"
+                  GridPane.columnIndex="0">
                 <Label text="Catégorie *"/>
-                <TextField fx:id="categorieTF" promptText="Ex: Nourriture, Transport..." styleClass="input"/>
+                <TextField fx:id="categorieTF"
+                           promptText="Ex: Nourriture, Transport..."
+                           styleClass="input"/>
             </VBox>
 
-            <VBox spacing="6" GridPane.rowIndex="0" GridPane.columnIndex="1">
+            <VBox spacing="6"
+                  GridPane.rowIndex="0"
+                  GridPane.columnIndex="1">
                 <Label text="Montant alloué *"/>
-                <TextField fx:id="montantTF" promptText="Ex: 400" styleClass="input"/>
+                <TextField fx:id="montantTF"
+                           promptText="Ex: 400"
+                           styleClass="input"/>
             </VBox>
 
-            <VBox spacing="6" GridPane.rowIndex="1" GridPane.columnIndex="0">
+            <VBox spacing="6"
+                  GridPane.rowIndex="1"
+                  GridPane.columnIndex="0">
                 <Label text="Priorité *"/>
-                <ComboBox fx:id="prioriteCB" styleClass="input"/>
+                <ComboBox fx:id="prioriteCB"
+                          styleClass="input"/>
             </VBox>
 
-            <VBox spacing="6" GridPane.rowIndex="1" GridPane.columnIndex="1">
+            <VBox spacing="6"
+                  GridPane.rowIndex="1"
+                  GridPane.columnIndex="1">
                 <Label text="Mois *"/>
-                <ComboBox fx:id="moisCB" promptText="Choisir un mois" styleClass="input"/>
+                <ComboBox fx:id="moisCB"
+                          promptText="Choisir un mois"
+                          styleClass="input"/>
             </VBox>
         </GridPane>
 
@@ -60,9 +81,16 @@
                 <Insets top="10" right="0" bottom="0" left="0"/>
             </padding>
 
-            <Button text="Ajouter la planification" onAction="#ajouter" styleClass="primary-btn"/>
-            <Button text="Annuler" onAction="#clear" styleClass="secondary-btn"/>
-            <Label fx:id="msgLabel" style="-fx-text-fill: #d22;"/>
+            <Button text="Ajouter la planification"
+                    onAction="#ajouter"
+                    styleClass="primary-btn"/>
+
+            <Button text="Annuler"
+                    onAction="#clear"
+                    styleClass="secondary-btn"/>
+
+            <Label fx:id="msgLabel"
+                   style="-fx-text-fill: #d22;"/>
         </HBox>
     </VBox>
 
